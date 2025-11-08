@@ -4,141 +4,252 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BNB Mining Platform</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-    :root {
-        --success-color: #28a745;
-        --danger-color: #dc3545;
-        --mining-active: #ffc107;
-    }
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #121212;
-        color: #fff;
-    }
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-    }
-    .balance-card, .mining-section, .redeem-card, .withdraw-card, .vip-card {
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-    .nav-item {
-        display: inline-block;
-        padding: 10px 20px;
-        cursor: pointer;
-    }
-    .nav-item.active {
-        background: #ffc107;
-        color: #000;
-        border-radius: 5px;
-    }
-    #startMiningBtn.active {
-        background: #28a745;
-        color: #fff;
-    }
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        z-index: 3000;
-        max-width: 300px;
-        animation: slideInRight 0.5s ease;
-    }
-    .notification.error {
-        background: var(--danger-color);
-    }
-    .notification.success {
-        background: var(--success-color);
-    }
-    #paymentModal, #verificationSection {
-        display: none;
-        position: fixed;
-        top: 0; left:0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8);
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-    }
-    .modal-content {
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-        width: 400px;
-    }
-    .floating-coin {
-        position: fixed;
-        font-size: 20px;
-        opacity: 0;
-        animation: floatCoin 2s ease-in forwards;
-        pointer-events: none;
-    }
-    @keyframes floatCoin {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(-150px); opacity: 0; }
-    }
-    .mining-circle, .mining-core, .mining-particle {
-        position: relative;
-    }
-    .mining-circle.active, .mining-core.active {
-        animation: rotate 2s linear infinite;
-    }
-    @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+:root {
+    --success-color: #4CAF50;
+    --danger-color: #F44336;
+    --mining-active: #FFD700;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #1a1a1a;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #111;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-item {
+    display: inline-block;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.nav-item.active {
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.container {
+    padding: 20px;
+}
+
+.balance-card, .mining-section, .redeem-card, .withdrawal-card {
+    background: #222;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.status-vip {
+    color: gold;
+}
+
+.status-free {
+    color: #aaa;
+}
+
+.mining-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    margin: 20px auto;
+    position: relative;
+}
+
+.mining-circle.active {
+    animation: rotateCircle 4s linear infinite;
+}
+
+.mining-core {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #FFD700;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mining-status {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.mining-status.active {
+    color: #4CAF50;
+}
+
+.mining-particle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #FFD700;
+    position: absolute;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.active {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: #fff;
+    z-index: 3000;
+    max-width: 300px;
+}
+
+.notification.error {
+    background: var(--danger-color);
+}
+
+.notification.success {
+    background: var(--success-color);
+}
+
+.floating-coin {
+    position: fixed;
+    font-size: 20px;
+    opacity: 0;
+    animation: floatCoin 2s ease-in forwards;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Animations */
+@keyframes rotateCircle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes floatCoin {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-200px); opacity: 0; }
+}
+
+@keyframes miningEffect {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Payment modal */
+#paymentModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#paymentModal .modal-content {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+}
+
+#addressDisplay {
+    margin-top: 10px;
+    display: none;
+}
 </style>
 </head>
 <body>
+
+<header>
+    <div>
+        <span class="nav-item active" data-tab="home">Home</span>
+        <span class="nav-item" data-tab="mining">Mining</span>
+        <span class="nav-item" data-tab="withdraw">Withdraw</span>
+    </div>
+    <div id="userId">USR738225</div>
+</header>
+
 <div class="container">
+
     <div class="balance-card">
-        <h2>User Dashboard</h2>
-        <p>Balance: <span id="userBalance">0.00 USDT</span></p>
-        <p>Today Earnings: <span id="todayEarnings">0.00 USDT</span></p>
-        <p>Total Earned: <span id="totalEarned">0.00 USDT</span></p>
-        <p>User ID: <span id="userId">USR000000</span></p>
-        <p>Status: <span id="userStatus">Free User</span></p>
-        <p>Mining Speed: <span id="currentSpeed">0.5 BNB/H</span></p>
+        <div>Balance: <span id="userBalance">0.00 USDT</span></div>
+        <div>Today: <span id="todayEarnings">0.00 USDT</span></div>
+        <div>Total Earned: <span id="totalEarned">0.00 USDT</span></div>
+        <div>Status: <span id="userStatus" class="status-free">Free User</span></div>
     </div>
 
     <div class="mining-section">
-        <h3>Mining</h3>
+        <div class="mining-circle">
+            <div class="mining-core"></div>
+        </div>
+        <div class="mining-status" id="miningStatus">Mining Inactive</div>
+        <div id="miningSpeed">Speed: 0.5 BNB/H</div>
         <button id="startMiningBtn"><i class="fas fa-play"></i> Start Mining</button>
-        <div class="mining-circle">⛏️</div>
-        <div class="mining-core"></div>
-        <div id="miningStatus">Mining Inactive</div>
     </div>
 
-    <div class="redeem-card">
-        <h3>Redeem VIP Code</h3>
-        <input type="text" id="redeemCodeInput" placeholder="Enter VIP Code">
-        <button id="redeemCodeBtn">Redeem</button>
-        <div id="redeemCodesList"></div>
+    <!-- Redeem code section removed from home page as requested -->
+
+    <div class="withdrawal-card" style="display:none;" id="withdrawCard">
+        <h3>Withdraw</h3>
+        <div class="withdrawal-tabs">
+            <span class="withdrawal-tab active" data-tab="bitget">Bitget</span>
+            <span class="withdrawal-tab" data-tab="bybit">Bybit</span>
+            <span class="withdrawal-tab" data-tab="blockchain">Blockchain</span>
+        </div>
+        <div class="withdrawal-content active" id="bitgetWithdrawal">
+            <input type="number" id="bitgetAmount" placeholder="Amount (USDT)">
+            <input type="text" id="bitgetUid" placeholder="Bitget UID">
+            <button class="withdraw-submit" data-type="bitget">Submit</button>
+        </div>
+        <div class="withdrawal-content" id="bybitWithdrawal">
+            <input type="number" id="bybitAmount" placeholder="Amount (USDT)">
+            <input type="text" id="bybitUid" placeholder="Bybit UID">
+            <button class="withdraw-submit" data-type="bybit">Submit</button>
+        </div>
+        <div class="withdrawal-content" id="blockchainWithdrawal">
+            <input type="number" id="blockchainAmount" placeholder="Amount (USDT)">
+            <input type="text" id="blockchainAddress" placeholder="Wallet Address">
+            <select id="blockchainCoin">
+                <option value="bnb">BNB</option>
+                <option value="trx">TRX</option>
+                <option value="sol">SOL</option>
+            </select>
+            <button class="withdraw-submit" data-type="blockchain">Submit</button>
+        </div>
     </div>
 
-    <div class="vip-card">
-        <h3>Buy VIP</h3>
-        <button class="buy-vip" data-tier="vip1" data-price="10">Buy VIP1 - 10 USDT</button>
-        <button class="buy-vip" data-tier="vip2" data-price="60">Buy VIP2 - 60 USDT</button>
-    </div>
 </div>
 
+<!-- Payment Modal -->
 <div id="paymentModal">
     <div class="modal-content">
         <h3 id="paymentTitle">Payment</h3>
-        <div id="chainOptionsContainer">
-            <button class="chain-option" data-chain="bnb">BNB</button>
-            <button class="chain-option" data-chain="trx">TRX</button>
-            <button class="chain-option" data-chain="sol">SOL</button>
+        <div class="chain-options">
+            <div class="chain-option" data-chain="bnb">BNB</div>
+            <div class="chain-option" data-chain="trx">TRX</div>
+            <div class="chain-option" data-chain="sol">SOL</div>
         </div>
         <div id="addressDisplay"></div>
         <button id="copyAddressBtn" disabled>Copy Address</button>
@@ -147,18 +258,18 @@
     </div>
 </div>
 
-<div id="verificationSection">
-    <div class="modal-content">
-        <h3>Payment Verification</h3>
-        <input type="text" id="telegramUsername" placeholder="Telegram Username">
-        <div id="fileUploadArea">Click to upload screenshot</div>
-        <input type="file" id="screenshotUpload" style="display:none;">
-        <div id="filePreview"></div>
-        <button id="submitVerificationBtn">Submit Verification</button>
-    </div>
+<!-- File upload & verification -->
+<div id="verificationSection" style="display:none;">
+    <input type="text" id="telegramUsername" placeholder="Telegram Username">
+    <div id="fileUploadArea">Upload Screenshot</div>
+    <input type="file" id="screenshotUpload" style="display:none;">
+    <div id="filePreview" style="display:none;"></div>
+    <button id="submitVerificationBtn">Submit Verification</button>
 </div>
 
 <script>
+// === JS CODE ===
+// DOM Elements
 const navItems = document.querySelectorAll('.nav-item');
 const startMiningBtn = document.getElementById('startMiningBtn');
 const buyVipBtns = document.querySelectorAll('.buy-vip');
@@ -167,234 +278,125 @@ const closePaymentBtn = document.getElementById('closePaymentBtn');
 const chainOptions = document.querySelectorAll('.chain-option');
 const copyAddressBtn = document.getElementById('copyAddressBtn');
 const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
-const redeemCodeBtn = document.getElementById('redeemCodeBtn');
+const withdrawSubmitBtns = document.querySelectorAll('.withdraw-submit');
 const submitVerificationBtn = document.getElementById('submitVerificationBtn');
-const fileUploadArea = document.getElementById('fileUploadArea');
-const screenshotUpload = document.getElementById('screenshotUpload');
-const redeemCodesList = document.getElementById('redeemCodesList');
 const miningCircle = document.querySelector('.mining-circle');
 const miningCore = document.querySelector('.mining-core');
 const miningStatusText = document.getElementById('miningStatus');
+const miningSpeedText = document.getElementById('miningSpeed');
+const screenshotUpload = document.getElementById('screenshotUpload');
+const fileUploadArea = document.getElementById('fileUploadArea');
+const filePreview = document.getElementById('filePreview');
 
 let userData = {
     balance: 0.00,
-    todayEarnings: 0.00,
-    totalEarned: 0.00,
+    totalMined: 0.0000,
+    miningActive: false,
     userStatus: 'free',
     dailyEarning: 0.10,
-    userId: 'USR738225',
-    miningActive: false,
-    miningStartTime: null,
-    totalMiningTime: 0,
-    totalMined: 0.0000,
     currentSpeed: 0.5,
-    withdrawalHistory: []
+    userId: 'USR738225',
+    totalMiningTime: 0
 };
 
-// 10 new demo VIP codes 10 USDT each
-let vipCodes = [
-    { code: 'VIP10A1', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A2', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A3', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A4', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A5', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A6', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A7', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A8', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A9', used: false, value: 10, type: 'vip2' },
-    { code: 'VIP10A10', used: false, value: 10, type: 'vip2' }
-];
-
-// Demo wallet addresses
-const walletAddresses = {
-    bnb: '0xDEMOADDRESSBNB00000000000000000000000000',
-    trx: 'TDEMOTRXADDRESS0000000000000000000',
-    sol: 'DEMOADDRESSSOL000000000000000000000000000000000000'
-};
-
-// Demo Telegram API
-const telegramBotToken = '123456:DEMO_TOKEN';
-const telegramChatId = '123456789';
+// Demo telegram API
+const telegramBotToken = 'DEMO_TOKEN';
+const telegramChatId = 'DEMO_CHATID';
 
 let miningInterval;
-let statsInterval;
 
 document.addEventListener('DOMContentLoaded', function() {
     updateUI();
     setupEventListeners();
-    startStatsTimer();
-    loadRedeemCodes();
 });
 
 function setupEventListeners() {
-    if (startMiningBtn) startMiningBtn.addEventListener('click', handleMiningToggle);
-    if (buyVipBtns.length > 0) buyVipBtns.forEach(btn => btn.addEventListener('click', handleVipPurchase));
-    if (closePaymentBtn) closePaymentBtn.addEventListener('click', closePaymentModal);
-    if (chainOptions.length > 0) chainOptions.forEach(opt => opt.addEventListener('click', handleChainSelection));
-    if (copyAddressBtn) copyAddressBtn.addEventListener('click', handleCopyAddress);
-    if (confirmPaymentBtn) confirmPaymentBtn.addEventListener('click', handleConfirmPayment);
-    if (redeemCodeBtn) redeemCodeBtn.addEventListener('click', handleRedeemCode);
-    if (submitVerificationBtn) submitVerificationBtn.addEventListener('click', handleVerificationSubmission);
-    if (fileUploadArea && screenshotUpload) {
-        fileUploadArea.addEventListener('click', () => screenshotUpload.click());
-        screenshotUpload.addEventListener('change', handleFileUpload);
-    }
-}
-
-function updateUI() {
-    document.getElementById('userBalance').textContent = userData.balance.toFixed(2)+' USDT';
-    document.getElementById('todayEarnings').textContent = userData.todayEarnings.toFixed(2)+' USDT';
-    document.getElementById('totalEarned').textContent = userData.totalEarned.toFixed(2)+' USDT';
-    document.getElementById('userId').textContent = userData.userId;
-    const statusElement = document.getElementById('userStatus');
-    statusElement.textContent = userData.userStatus === 'vip' ? 'VIP User' : 'Free User';
-    userData.currentSpeed = userData.userStatus==='vip'?15.0:0.5;
-    document.getElementById('currentSpeed').textContent = userData.currentSpeed+' BNB/H';
+    startMiningBtn.addEventListener('click', handleMiningToggle);
+    closePaymentBtn.addEventListener('click', closePaymentModal);
+    chainOptions.forEach(opt => opt.addEventListener('click', handleChainSelection));
+    copyAddressBtn.addEventListener('click', handleCopyAddress);
+    confirmPaymentBtn.addEventListener('click', handleConfirmPayment);
+    submitVerificationBtn.addEventListener('click', handleVerificationSubmission);
 }
 
 function handleMiningToggle() {
-    if(userData.miningActive){ stopMining(); } else { startMining(); }
+    if (userData.miningActive) stopMining();
+    else startMining();
 }
 
 function startMining() {
     userData.miningActive = true;
-    userData.miningStartTime = Date.now();
-    startMiningBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Mining';
-    startMiningBtn.classList.add('active');
-    startMiningVisuals();
+    startMiningBtn.textContent = 'Stop Mining';
+    miningCircle.classList.add('active');
+    miningStatusText.textContent = 'Mining Active';
+    
     miningInterval = setInterval(() => {
-        const minedAmount = userData.currentSpeed/3600;
-        userData.totalMined += minedAmount;
-        userData.balance += minedAmount;
-        userData.totalEarned += minedAmount;
+        const mined = userData.currentSpeed / 3600;
+        userData.totalMined += mined;
+        userData.balance += mined;
         updateUI();
-    },1000);
-    showNotification('Mining started!','success');
+    }, 1000);
 }
 
 function stopMining() {
-    userData.miningActive=false;
-    startMiningBtn.innerHTML='<i class="fas fa-play"></i> Start Mining';
-    startMiningBtn.classList.remove('active');
-    stopMiningVisuals();
-    clearInterval(miningInterval);
-    showNotification('Mining stopped!','success');
-}
-
-function startMiningVisuals() {
-    miningCircle.classList.add('active');
-    miningCore.classList.add('active');
-    miningStatusText.textContent='Mining Active';
-}
-
-function stopMiningVisuals() {
+    userData.miningActive = false;
+    startMiningBtn.textContent = 'Start Mining';
     miningCircle.classList.remove('active');
-    miningCore.classList.remove('active');
-    miningStatusText.textContent='Mining Inactive';
+    miningStatusText.textContent = 'Mining Inactive';
+    clearInterval(miningInterval);
 }
 
-function handleVipPurchase(event){
-    const tier = event.currentTarget.getAttribute('data-tier');
-    const price = event.currentTarget.getAttribute('data-price');
-    document.getElementById('paymentTitle').textContent=`Buy ${tier.toUpperCase()} - ${price} USDT`;
-    paymentModal.style.display='flex';
-    document.body.style.overflow='hidden';
+function updateUI() {
+    document.getElementById('userBalance').textContent = userData.balance.toFixed(2) + ' USDT';
+    miningSpeedText.textContent = 'Speed: ' + userData.currentSpeed + ' BNB/H';
 }
 
-function handleChainSelection(event){
-    chainOptions.forEach(opt=>opt.classList.remove('active'));
+function handleChainSelection(event) {
+    chainOptions.forEach(opt => opt.classList.remove('active'));
     event.currentTarget.classList.add('active');
     const chain = event.currentTarget.getAttribute('data-chain');
-    document.getElementById('addressDisplay').innerHTML=`<strong>${chain.toUpperCase()} Address:</strong> ${walletAddresses[chain]}`;
-    copyAddressBtn.disabled=false;
+    const addressDisplay = document.getElementById('addressDisplay');
+    addressDisplay.textContent = `${chain.toUpperCase()} Address: DEMO_ADDRESS\nMemo: ${userData.userId}`;
+    addressDisplay.style.display = 'block';
+    copyAddressBtn.disabled = false;
 }
 
-function handleCopyAddress(){
-    const addressText = document.getElementById('addressDisplay').textContent;
-    navigator.clipboard.writeText(addressText).then(()=>showNotification('Address copied!','success'));
+function handleCopyAddress() {
+    copyToClipboard(document.getElementById('addressDisplay').textContent);
+    showNotification('Address copied!', 'success');
 }
 
-function handleConfirmPayment(){
-    document.getElementById('verificationSection').style.display='block';
-    paymentModal.style.display='none';
-    document.body.style.overflow='auto';
+function handleConfirmPayment() {
+    paymentModal.style.display = 'none';
+    document.getElementById('verificationSection').style.display = 'block';
 }
 
-function closePaymentModal(){
-    paymentModal.style.display='none';
-    document.body.style.overflow='auto';
+function closePaymentModal() {
+    paymentModal.style.display = 'none';
+    document.getElementById('addressDisplay').style.display = 'none';
+    copyAddressBtn.disabled = true;
 }
 
-function handleFileUpload(e){
-    const file=e.target.files[0];
-    if(file && file.type.startsWith('image/')){
-        const reader=new FileReader();
-        reader.onload=function(e){
-            document.getElementById('filePreview').innerHTML=`<img src="${e.target.result}" style="max-width:100%">`;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-function handleVerificationSubmission(){
-    const telegramUsername = document.getElementById('telegramUsername').value.trim();
-    const screenshotFile = screenshotUpload.files[0];
-    if(!telegramUsername){ showNotification('Enter Telegram username','error'); return;}
-    if(!screenshotFile){ showNotification('Upload screenshot','error'); return;}
-    userData.userStatus='vip';
-    userData.dailyEarning=15.0;
-    userData.currentSpeed=15.0;
+function handleVerificationSubmission() {
+    showNotification('Payment verified! VIP activated.', 'success');
+    userData.userStatus = 'vip';
+    userData.dailyEarning = 7.00;
+    userData.currentSpeed = 15.0;
     updateUI();
-    document.getElementById('verificationSection').style.display='none';
-    showNotification('VIP activated!','success');
 }
 
-function loadRedeemCodes(){
-    if(!redeemCodesList) return;
-    redeemCodesList.innerHTML='';
-    vipCodes.forEach(vc=>{
-        const codeElement=document.createElement('div');
-        codeElement.className=`vip-code-item ${vc.used?'used':'available'}`;
-        codeElement.textContent=vc.code;
-        if(!vc.used){
-            codeElement.addEventListener('click',()=>{
-                document.getElementById('redeemCodeInput').value=vc.code;
-                showNotification(`VIP code ${vc.code} ready to redeem!`,'success');
-            });
-        }
-        redeemCodesList.appendChild(codeElement);
-    });
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
 }
 
-function handleRedeemCode(){
-    const codeInput=document.getElementById('redeemCodeInput').value.trim().toUpperCase();
-    if(!codeInput){ showNotification('Enter VIP code','error'); return;}
-    const vipCode=vipCodes.find(vc=>vc.code===codeInput);
-    if(!vipCode){ showNotification('Invalid code','error'); return;}
-    if(vipCode.used){ showNotification('Code already used','error'); return;}
-    vipCode.used=true;
-    userData.userStatus='vip';
-    userData.dailyEarning=15.0;
-    userData.currentSpeed=15.0;
-    updateUI();
-    loadRedeemCodes();
-    showNotification(`VIP activated with code ${codeInput}!`,'success');
-    document.getElementById('redeemCodeInput').value='';
+function showNotification(message, type) {
+    const notif = document.createElement('div');
+    notif.className = 'notification ' + (type==='error'?'error':'success');
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    setTimeout(()=>notif.remove(),3000);
 }
 
-function showNotification(message,type='success'){
-    const notification=document.createElement('div');
-    notification.className='notification '+(type==='error'?'error':'success');
-    notification.textContent=message;
-    document.body.appendChild(notification);
-    setTimeout(()=>{notification.remove();},3000);
-}
-
-function startStatsTimer(){
-    statsInterval=setInterval(()=>{
-        if(userData.miningActive){ userData.totalMiningTime++; }
-    },1000);
-}
 </script>
 </body>
-</html>
+                </html>
