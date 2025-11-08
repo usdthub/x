@@ -1,119 +1,891 @@
+/* === CSS RESET AND BASE STYLES === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 :root {
-    --success-color: #4CAF50;
-    --danger-color: #F44336;
-    --mining-active: #FFD700;
+    --primary-color: #F0B90B;
+    --secondary-color: #1E2026;
+    --accent-color: #2B3139;
+    --text-color: #FFFFFF;
+    --text-secondary: #848E9C;
+    --danger-color: #F6465D;
+    --success-color: #0ECB81;
+    --card-bg: #1E2026;
+    --body-bg: #0B0E11;
+    --vip-gold: #FFD700;
+    --vip-silver: #C0C0C0;
+    --mining-active: #00ff88;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #1a1a1a;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background: #111;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-item {
-    display: inline-block;
-    margin-right: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.nav-item.active {
-    font-weight: bold;
-    color: #FFD700;
+    background: var(--body-bg);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding-bottom: 80px;
+    line-height: 1.6;
 }
 
 .container {
-    padding: 20px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 15px;
 }
 
-.balance-card, .mining-section, .redeem-card, .withdrawal-card {
-    background: #222;
-    border-radius: 10px;
+/* === HEADER SECTION === */
+.header {
+    background: var(--card-bg);
+    border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    text-align: center;
+    border: 1px solid var(--accent-color);
 }
 
-.status-vip {
-    color: gold;
+.platform-title {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), #F8D33A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+
+.platform-subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 14px;
+    color: var(--text-secondary);
 }
 
 .status-free {
-    color: #aaa;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.status-vip {
+    color: var(--vip-gold);
+    font-weight: 600;
+}
+
+/* === BALANCE CARD === */
+.balance-card {
+    background: linear-gradient(135deg, var(--primary-color), #F8D33A);
+    border-radius: 20px;
+    padding: 25px;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(240, 185, 11, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(30deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: rotate(30deg) translateX(-100%); }
+    100% { transform: rotate(30deg) translateX(200%); }
+}
+
+.balance-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.balance-amount {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 10px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.balance-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.wallet-label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.wallet-amount {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* === MINING SECTION === */
+.mining-section {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+    text-align: center;
+}
+
+.mining-animation-container {
+    margin-bottom: 20px;
 }
 
 .mining-circle {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--accent-color);
     border-radius: 50%;
-    border: 3px solid #FFD700;
-    margin: 20px auto;
+    margin: 0 auto 15px;
     position: relative;
+    transition: all 0.5s ease;
 }
 
 .mining-circle.active {
-    animation: rotateCircle 4s linear infinite;
+    border-color: var(--mining-active);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .mining-core {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
     border-radius: 50%;
-    background: #FFD700;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    transition: all 0.5s ease;
 }
 
-.mining-status {
-    text-align: center;
-    margin-top: 10px;
-    font-weight: bold;
+.mining-circle.active .mining-core {
+    background: var(--mining-active);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    animation: corePulse 2s infinite;
 }
 
-.mining-status.active {
-    color: #4CAF50;
+@keyframes corePulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
 }
 
 .mining-particle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #FFD700;
     position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0;
 }
 
-button {
-    padding: 10px 15px;
+.mining-circle.active .mining-particle {
+    opacity: 1;
+}
+
+.mining-circle.active .p1 {
+    animation: orbit1 3s linear infinite;
+    background: #FF6B6B;
+}
+
+.mining-circle.active .p2 {
+    animation: orbit2 2.5s linear infinite;
+    background: #4ECDC4;
+}
+
+.mining-circle.active .p3 {
+    animation: orbit3 3.5s linear infinite;
+    background: #FFE66D;
+}
+
+.mining-circle.active .p4 {
+    animation: orbit4 2s linear infinite;
+    background: #6B48FF;
+}
+
+@keyframes orbit1 {
+    0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+@keyframes orbit2 {
+    0% { transform: rotate(90deg) translateX(50px) rotate(-90deg); }
+    100% { transform: rotate(450deg) translateX(50px) rotate(-450deg); }
+}
+
+@keyframes orbit3 {
+    0% { transform: rotate(180deg) translateX(70px) rotate(-180deg); }
+    100% { transform: rotate(540deg) translateX(70px) rotate(-540deg); }
+}
+
+@keyframes orbit4 {
+    0% { transform: rotate(270deg) translateX(45px) rotate(-270deg); }
+    100% { transform: rotate(630deg) translateX(45px) rotate(-630deg); }
+}
+
+.mining-status-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    transition: all 0.5s ease;
+}
+
+.mining-status-text.active {
+    color: var(--mining-active);
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.mining-speed {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.mining-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vip-mining-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.vip-mining-btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 10px;
+}
+
+.vip-mining-btn.vip1 {
+    background: linear-gradient(135deg, var(--vip-silver), #e0e0e0);
+    color: var(--secondary-color);
+}
+
+.vip-mining-btn.vip2 {
+    background: linear-gradient(135deg, var(--vip-gold), #ffed4e);
+    color: var(--secondary-color);
+}
+
+/* === REDEEM CODE SECTION === */
+.redeem-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+}
+
+/* === VIP TIERS === */
+.vip-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+}
+
+.vip-tier {
+    background: var(--accent-color);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.vip-tier:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.vip-tier.gold {
+    border-color: var(--vip-gold);
+}
+
+.vip-tier.silver {
+    border-color: var(--vip-silver);
+}
+
+.vip-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.vip-title i {
+    margin-right: 10px;
+}
+
+.vip-tier.gold .vip-title {
+    color: var(--vip-gold);
+}
+
+.vip-tier.silver .vip-title {
+    color: var(--vip-silver);
+}
+
+.vip-earning {
+    color: var(--success-color);
+    font-weight: 700;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.vip-features {
+    margin: 15px 0;
+}
+
+.vip-features div {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.vip-features i {
+    color: var(--success-color);
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+/* === VERIFICATION SECTION === */
+.verification-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+}
+
+.verification-info {
+    background: rgba(240, 185, 11, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.verification-info p {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* === WITHDRAWAL SECTION === */
+.withdraw-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+}
+
+.withdrawal-tabs {
+    display: flex;
+    background: var(--accent-color);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+.withdrawal-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: transparent;
     border: none;
-    border-radius: 5px;
+    color: var(--text-secondary);
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: bold;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.withdrawal-tab.active {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.withdrawal-content {
+    display: none;
+}
+
+.withdrawal-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+/* === STATS SECTION === */
+.stats-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-item {
+    background: var(--accent-color);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
     transition: all 0.3s ease;
 }
 
-button.active {
-    background: #4CAF50;
-    color: #fff;
+.stat-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
+.stat-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* === FORM STYLES === */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-color);
+    background: var(--accent-color);
+    color: var(--text-color);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(240, 185, 11, 0.3);
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-color);
+    background: var(--accent-color);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.processing-info {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* === FILE UPLOAD === */
+.file-upload-area {
+    border: 2px dashed var(--accent-color);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(240, 185, 11, 0.05);
+}
+
+.file-upload-area i {
+    font-size: 40px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.file-upload-area p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.file-preview {
+    margin-top: 15px;
+    display: none;
+}
+
+.file-preview img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--accent-color);
+}
+
+/* === PAYMENT MODAL === */
+.payment-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(11, 14, 17, 0.95);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.payment-content {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    border: 1px solid var(--accent-color);
+    animation: modalSlideIn 0.5s ease;
+}
+
+.payment-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.chain-options {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.chain-option {
+    background: var(--accent-color);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    margin: 0 5px;
+}
+
+.chain-option:hover {
+    background: rgba(240, 185, 11, 0.2);
+    transform: translateY(-3px);
+}
+
+.chain-option.active {
+    background: rgba(240, 185, 11, 0.3);
+    border: 2px solid var(--primary-color);
+}
+
+.chain-option i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.address-display {
+    background: var(--accent-color);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    word-break: break-all;
+    font-size: 14px;
+    display: none;
+}
+
+.payment-instructions {
+    margin: 15px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.payment-instructions p {
+    margin: 5px 0;
+}
+
+.payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* === BUTTONS === */
+.btn {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    background: #F8D33A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(240, 185, 11, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-disabled {
+    background: var(--accent-color);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.btn-disabled:hover {
+    background: var(--accent-color);
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-disabled::before {
+    display: none;
+}
+
+.btn-success {
+    background: var(--success-color);
+}
+
+.btn-success:hover {
+    background: #1EDF9A;
+}
+
+.btn-cancel {
+    background: var(--accent-color);
+    color: var(--text-color);
+}
+
+.btn-cancel:hover {
+    background: var(--danger-color);
+}
+
+.mining-btn {
+    font-size: 16px;
+    padding: 15px 25px;
+}
+
+.mining-btn.active {
+    background: var(--mining-active);
+    color: var(--secondary-color);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+/* === NAVIGATION BAR === */
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 10px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    border-top: 1px solid var(--accent-color);
+    z-index: 1000;
+}
+
+.nav-item {
+    text-align: center;
+    padding: 8px 15px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+.nav-item.active::before {
+    width: 80%;
+}
+
+.nav-item.active i {
+    transform: translateY(-2px);
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+    background: rgba(240, 185, 11, 0.1);
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* === NOTIFICATION STYLES === */
 .notification {
     position: fixed;
     top: 20px;
     right: 20px;
+    background: var(--success-color);
+    color: white;
     padding: 15px 20px;
     border-radius: 10px;
-    color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     z-index: 3000;
     max-width: 300px;
     animation: slideInRight 0.5s ease;
@@ -123,10 +895,41 @@ button.active {
     background: var(--danger-color);
 }
 
-.notification.success {
-    background: var(--success-color);
+/* === REDEEM CODES === */
+.codes-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
 }
 
+.vip-code-item {
+    background: var(--accent-color);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: monospace;
+    font-size: 12px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.vip-code-item.used {
+    opacity: 0.5;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.vip-code-item.available {
+    border-color: var(--success-color);
+}
+
+.vip-code-item.available:hover {
+    background: rgba(14, 203, 129, 0.1);
+}
+
+/* === FLOATING COINS === */
 .floating-coin {
     position: fixed;
     font-size: 20px;
@@ -136,55 +939,58 @@ button.active {
     pointer-events: none;
 }
 
-#paymentModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-#paymentModal .modal-content {
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-}
-
-#addressDisplay {
-    margin-top: 10px;
-    display: none;
-}
-
-#fileUploadArea {
-    background: #333;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    margin: 10px 0;
-}
-
-#filePreview img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-top: 10px;
-}
-
-/* Animations */
-@keyframes rotateCircle {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 @keyframes floatCoin {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-200px); opacity: 0; }
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
 }
 
-@keyframes miningEffect {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(0); opacity: 0; }
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .balance-amount {
+        font-size: 32px;
+    }
+    
+    .mining-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .vip-mining-buttons {
+        flex-direction: column;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chain-options {
+        flex-direction: column;
+    }
+    
+    .chain-option {
+        margin: 5px 0;
+    }
+    
+    .codes-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-item {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    
+    .nav-item i {
+        font-size: 18px;
+    }
 }
