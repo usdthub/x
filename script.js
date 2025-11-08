@@ -942,26 +942,76 @@ function showNotification(message, type) {
     }, 3000);
 }
 
+/**
+ * sendTelegramMessage
+ * - Attempts to send message directly to Telegram Bot API.
+ * - If direct request fails (CORS or network), tries a public CORS proxy fallback.
+ * - If both fail, shows an error notification advising to use a server-side proxy.
+ */
 function sendTelegramMessage(message) {
-    // Simulate Telegram API call
-    console.log('📱 Telegram Message:', message);
-    
-    // In production, uncomment this:
-    /*
-    fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+    // Build payload
+    const payload = {
+        chat_id: telegramChatId,
+        text: message,
+        parse_mode: 'HTML'
+    };
+
+    // Direct fetch to Telegram API
+    const urlDirect = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+
+    return fetch(urlDirect, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            chat_id: telegramChatId,
-            text: message,
-            parse_mode: 'HTML'
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Telegram API direct request failed');
+        return res.json();
+    })
+    .then(data => {
+        if (data && data.ok) {
+            console.log('✅ Message sent to Telegram successfully (direct).');
+            return true;
+        } else {
+            throw new Error('Telegram API returned error (direct)');
+        }
+    })
+    .catch(err => {
+        console.warn('⚠️ Direct Telegram send failed:', err);
+
+        // Try using a CORS proxy fallback
+        // NOTE: Public proxies may be rate-limited or unreliable.
+        // If this also fails, the user should host a small serverless function to send messages reliably.
+        const proxyPrefix = 'https://corsproxy.io/?';
+        const urlProxy = proxyPrefix + encodeURIComponent(urlDirect);
+
+        return fetch(urlProxy, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
         })
-    }).catch(error => {
-        console.error('❌ Telegram API error:', error);
+        .then(res => {
+            if (!res.ok) throw new Error('Telegram API proxy request failed');
+            return res.json();
+        })
+        .then(data => {
+            if (data && (data.ok || data.result)) {
+                console.log('✅ Message sent to Telegram successfully (proxy).');
+                return true;
+            } else {
+                throw new Error('Telegram API returned error (proxy)');
+            }
+        })
+        .catch(err2 => {
+            console.error('❌ All attempts to send Telegram message failed:', err2);
+            showNotification('Telegram message failed (CORS or network). For 100% reliability, use a server-side proxy (Netlify/Vercel/Cloudflare Worker).', 'error');
+            return false;
+        });
     });
-    */
 }
 
 // Visual effects
