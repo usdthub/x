@@ -3,205 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Miner Pro - Smart Mining Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>WLFI Mining App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-coins"></i> Crypto Miner Pro</h1>
-            <p>Start mining and earn 2 USDT every 2 hours! No bugs, guaranteed performance.</p>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <h1>WLFI</h1>
+                <div class="user-info">
+                    <span id="userName">Loading...</span>
+                </div>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="mine">Mine</button>
+                <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+                <button class="tab-btn" data-tab="upgrade">Upgrade</button>
+                <button class="tab-btn" data-tab="team">Team</button>
+                <button class="tab-btn" data-tab="wallet">Wallet</button>
+            </nav>
         </header>
 
-        <div class="dashboard">
-            <div class="card">
-                <h2><i class="fas fa-wallet"></i> Your Balance</h2>
-                <div class="balance" id="balance">0.00 USDT</div>
-                <div class="stats">
-                    <div class="stat">
-                        <span>Mining Status:</span>
-                        <span class="stat-value" id="mining-status">Stopped</span>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mine Tab -->
+            <div id="mine" class="tab-content active">
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <span class="currency">WLFI</span>
+                        <span class="level">Level 0</span>
                     </div>
-                    <div class="stat">
-                        <span>Mining Time:</span>
-                        <span class="stat-value" id="mining-time">00:00:00</span>
-                    </div>
-                    <div class="stat">
-                        <span>Next Reward:</span>
-                        <span class="stat-value">2 USDT</span>
-                    </div>
-                    <div class="stat">
-                        <span>Total Users:</span>
-                        <span class="stat-value" id="total-users">0</span>
+                    <div class="balance-amount" id="wlfiBalance">250.00</div>
+                    <div class="mining-speed">
+                        <span>Mining Speed: </span>
+                        <span id="miningSpeed">1.5 WLFI/H</span>
                     </div>
                 </div>
-                
-                <div class="telegram-connect">
-                    <h3><i class="fab fa-telegram"></i> Telegram API</h3>
-                    <p>Connect your Telegram account for notifications</p>
-                    <button class="btn telegram-btn" id="connect-telegram">
-                        <i class="fab fa-telegram"></i> Connect Telegram
-                    </button>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" id="claimBtn">Claim Profits</button>
+                    <button class="btn-secondary" onclick="showTab('tasks')">Tasks Center</button>
+                </div>
+
+                <div class="rewards-section">
+                    <div class="reward-card">
+                        <h3>Invitation Rewards</h3>
+                        <div class="reward-amount">+300.00 WLFI</div>
+                        <p>Invite 3 valid direct subordinates to reward 300 WLFI coins</p>
+                        <div class="invite-progress">
+                            <span id="inviteCount">0/3</span> invitees
+                        </div>
+                        <button class="btn-invite" onclick="shareInvite()">Invite Friends</button>
+                    </div>
+
+                    <div class="reward-card">
+                        <h3>Sign-in reward</h3>
+                        <button class="btn-checkin" id="checkinBtn">Check In</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <h2><i class="fas fa-cogs"></i> Mining Controls</h2>
-                <div class="controls">
-                    <button id="start-mining" class="btn btn-primary">
-                        <i class="fas fa-play"></i> Start Mining
-                    </button>
-                    <button id="stop-mining" class="btn btn-secondary" disabled>
-                        <i class="fas fa-stop"></i> Stop Mining
-                    </button>
-                    <button id="withdraw" class="btn btn-secondary" disabled>
-                        <i class="fas fa-money-bill-wave"></i> Withdraw Funds
-                    </button>
-                </div>
-
-                <div class="mining-animation">
-                    <div class="miner">
-                        <div class="pickaxe"></div>
-                        <div class="rock"></div>
-                        <div class="sparks">
-                            <div class="spark spark1"></div>
-                            <div class="spark spark2"></div>
-                            <div class="spark spark3"></div>
+            <!-- Wallet Tab -->
+            <div id="wallet" class="tab-content">
+                <div class="wallet-section">
+                    <div class="wallet-balance">
+                        <div class="balance-item">
+                            <span>WLFI Balance</span>
+                            <span id="walletWlfi">250.00</span>
+                        </div>
+                        <div class="balance-item">
+                            <span>USDT Balance</span>
+                            <span id="walletUsdt">0.00</span>
                         </div>
                     </div>
-                    <p id="mining-text">Mining is stopped</p>
-                    
-                    <div class="mining-progress">
-                        <div class="progress-bar" id="progress-bar"></div>
-                    </div>
-                    <p>Next reward in: <span id="reward-timer">02:00:00</span></p>
-                </div>
-            </div>
-        </div>
 
-        <div class="card users">
-            <h2><i class="fas fa-users"></i> Active Miners</h2>
-            <div class="user-list" id="user-list">
-                <!-- Users will be added here dynamically -->
-            </div>
-        </div>
+                    <div class="wallet-actions">
+                        <button class="btn-wallet" onclick="showRecharge()">Recharge</button>
+                        <button class="btn-wallet" onclick="showWithdraw()">Withdraw</button>
+                        <button class="btn-wallet" onclick="showSwap()">Swap</button>
+                    </div>
 
-        <div class="card">
-            <h2><i class="fas fa-chart-line"></i> Mining Statistics</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-title">Hash Rate</div>
-                        <div class="stat-value" id="hash-rate">125 MH/s</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-title">Power Usage</div>
-                        <div class="stat-value" id="power-usage">850 W</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-thermometer-half"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-title">Temperature</div>
-                        <div class="stat-value" id="temperature">68°C</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-title">Efficiency</div>
-                        <div class="stat-value" id="efficiency">92%</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <!-- Withdrawal Modal -->
+                    <div id="withdrawModal" class="modal">
+                        <div class="modal-content">
+                            <h3>Withdraw USDT</h3>
+                            <div class="available-balance">
+                                Available: <span id="availableUsdt">0.000000</span> USDT
+                            </div>
+                            
+                            <div class="network-selection">
+                                <label>Select Network:</label>
+                                <div class="network-options">
+                                    <label><input type="radio" name="network" value="BEP20-USDT"> BEP20-USDT</label>
+                                    <label><input type="radio" name="network" value="BEP20-USDC"> BEP20-USDC</label>
+                                    <label><input type="radio" name="network" value="POLYGON-USDT"> POLYGON-USDT</label>
+                                </div>
+                            </div>
 
-        <div class="card">
-            <h2><i class="fas fa-history"></i> Recent Transactions</h2>
-            <div class="transactions" id="transactions">
-                <div class="transaction-item">
-                    <div class="transaction-icon success">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="transaction-details">
-                        <div class="transaction-title">Mining Reward</div>
-                        <div class="transaction-time">2 hours ago</div>
-                    </div>
-                    <div class="transaction-amount success">+2.00 USDT</div>
-                </div>
-                <div class="transaction-item">
-                    <div class="transaction-icon success">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="transaction-details">
-                        <div class="transaction-title">Mining Reward</div>
-                        <div class="transaction-time">4 hours ago</div>
-                    </div>
-                    <div class="transaction-amount success">+2.00 USDT</div>
-                </div>
-                <div class="transaction-item">
-                    <div class="transaction-icon success">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="transaction-details">
-                        <div class="transaction-title">Mining Reward</div>
-                        <div class="transaction-time">6 hours ago</div>
-                    </div>
-                    <div class="transaction-amount success">+2.00 USDT</div>
-                </div>
-            </div>
-        </div>
+                            <div class="input-group">
+                                <label>Withdrawal address</label>
+                                <input type="text" id="withdrawAddress" placeholder="Enter withdrawal address">
+                            </div>
 
-        <footer>
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3><i class="fas fa-coins"></i> Crypto Miner Pro</h3>
-                    <p>Professional cryptocurrency mining platform with guaranteed returns and zero bugs.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
-                        <li><a href="#"><i class="fas fa-history"></i> History</a></li>
-                        <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
-                        <li><a href="#"><i class="fas fa-envelope"></i> Contact Us</a></li>
-                        <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
-                        <li><a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
-                    </ul>
+                            <div class="input-group">
+                                <label>Withdrawal amount</label>
+                                <input type="number" id="withdrawAmount" placeholder="Enter amount">
+                                <button onclick="setMaxAmount()">All</button>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Security password</label>
+                                <input type="password" id="securityPassword" placeholder="Security password">
+                            </div>
+
+                            <div class="fee-info">
+                                <span>Fee: 0 USDT</span>
+                                <span>Actual arrival: <span id="actualAmount">0</span> USDT</span>
+                            </div>
+
+                            <div class="modal-actions">
+                                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                                <button class="btn-confirm" onclick="processWithdrawal()">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Crypto Miner Pro. All rights reserved.</p>
-                <p>This is a simulation for demonstration purposes only.</p>
-            </div>
-        </footer>
+
+            <!-- Other tabs content would go here -->
+        </main>
     </div>
 
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span>Reward added: 2 USDT!</span>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="js/telegram.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
