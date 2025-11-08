@@ -1,402 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BNB Mining Platform</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-:root {
-    --success-color: #4CAF50;
-    --danger-color: #F44336;
-    --mining-active: #FFD700;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #1a1a1a;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background: #111;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-item {
-    display: inline-block;
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.nav-item.active {
-    font-weight: bold;
-    color: #FFD700;
-}
-
-.container {
-    padding: 20px;
-}
-
-.balance-card, .mining-section, .redeem-card, .withdrawal-card {
-    background: #222;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-vip {
-    color: gold;
-}
-
-.status-free {
-    color: #aaa;
-}
-
-.mining-circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 3px solid #FFD700;
-    margin: 20px auto;
-    position: relative;
-}
-
-.mining-circle.active {
-    animation: rotateCircle 4s linear infinite;
-}
-
-.mining-core {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #FFD700;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.mining-status {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.mining-status.active {
-    color: #4CAF50;
-}
-
-.mining-particle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #FFD700;
-    position: absolute;
-}
-
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button.active {
-    background: #4CAF50;
-    color: #fff;
-}
-
-.notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 10px;
-    color: #fff;
-    z-index: 3000;
-    max-width: 300px;
-}
-
-.notification.error {
-    background: var(--danger-color);
-}
-
-.notification.success {
-    background: var(--success-color);
-}
-
-.floating-coin {
-    position: fixed;
-    font-size: 20px;
-    opacity: 0;
-    animation: floatCoin 2s ease-in forwards;
-    z-index: 1000;
-    pointer-events: none;
-}
-
-/* Animations */
-@keyframes rotateCircle {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes floatCoin {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-200px); opacity: 0; }
-}
-
-@keyframes miningEffect {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(0); opacity: 0; }
-}
-
-/* Payment modal */
-#paymentModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-#paymentModal .modal-content {
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-}
-
-#addressDisplay {
-    margin-top: 10px;
-    display: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNB Mining Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="platform-title">BNB MINING</div>
+            <div class="platform-subtitle">Professional Mining Platform</div>
+            <div class="user-info">
+                <div>User ID: <span id="userId">USR738225</span></div>
+                <div>Status: <span id="userStatus" class="status-free">Free User</span></div>
+            </div>
+        </div>
 
-<header>
-    <div>
-        <span class="nav-item active" data-tab="home">Home</span>
-        <span class="nav-item" data-tab="mining">Mining</span>
-        <span class="nav-item" data-tab="withdraw">Withdraw</span>
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-title">Your Balance</div>
+            <div class="balance-amount" id="userBalance">0.00 USDT</div>
+            <div class="balance-details">
+                <div>
+                    <div class="wallet-label">Today's Earnings</div>
+                    <div class="wallet-amount" id="todayEarnings">0.00 USDT</div>
+                </div>
+                <div>
+                    <div class="wallet-label">Total Earned</div>
+                    <div class="wallet-amount" id="totalEarned">0.00 USDT</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mining Animation Section -->
+        <div class="mining-section">
+            <div class="mining-animation-container">
+                <div class="mining-circle">
+                    <div class="mining-core"></div>
+                    <div class="mining-particle p1"></div>
+                    <div class="mining-particle p2"></div>
+                    <div class="mining-particle p3"></div>
+                    <div class="mining-particle p4"></div>
+                </div>
+                <div class="mining-status-text" id="miningStatus">Mining Inactive</div>
+                <div class="mining-speed" id="miningSpeed">Speed: 0.5 BNB/H</div>
+            </div>
+            
+            <div class="mining-controls">
+                <button class="btn mining-btn" id="startMiningBtn">
+                    <i class="fas fa-play"></i> Start Mining
+                </button>
+                
+                <div class="vip-mining-buttons">
+                    <button class="btn vip-mining-btn vip1" data-vip="vip1">
+                        <i class="fas fa-crown"></i> VIP 1 Mining
+                    </button>
+                    <button class="btn vip-mining-btn vip2" data-vip="vip2">
+                        <i class="fas fa-crown"></i> VIP 2 Mining
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redeem Code Section -->
+        <div class="redeem-card">
+            <div class="card-title">
+                <i class="fas fa-gift"></i> Redeem VIP Code
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-input" id="redeemCodeInput" placeholder="Enter VIP Code (10 characters)" maxlength="10">
+                <button class="btn btn-success btn-block" id="redeemCodeBtn">
+                    <i class="fas fa-ticket-alt"></i> Redeem Code
+                </button>
+            </div>
+            <div class="available-codes">
+                <h4>Available VIP Codes:</h4>
+                <div id="redeemCodesList" class="codes-list">
+                    <!-- Codes will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VIP Purchase Section -->
+        <div class="vip-card">
+            <div class="card-title">
+                <i class="fas fa-crown"></i> VIP Membership
+            </div>
+            
+            <div class="vip-tier silver">
+                <div class="vip-title">
+                    <i class="fas fa-crown"></i> VIP 1 - 10 USDT
+                </div>
+                <div class="vip-earning">Daily Earning: 1 USDT</div>
+                <div class="vip-features">
+                    <div><i class="fas fa-check"></i> Mining Speed: 2.5 BNB/H</div>
+                    <div><i class="fas fa-check"></i> No Withdrawal Limit</div>
+                    <div><i class="fas fa-check"></i> Priority Support</div>
+                </div>
+                <button class="btn btn-block buy-vip" data-tier="vip1" data-price="10">
+                    <i class="fas fa-shopping-cart"></i> Buy VIP 1
+                </button>
+            </div>
+            
+            <div class="vip-tier gold">
+                <div class="vip-title">
+                    <i class="fas fa-crown"></i> VIP 2 - 60 USDT
+                </div>
+                <div class="vip-earning">Daily Earning: 7 USDT</div>
+                <div class="vip-features">
+                    <div><i class="fas fa-check"></i> Mining Speed: 15 BNB/H</div>
+                    <div><i class="fas fa-check"></i> No Withdrawal Limit</div>
+                    <div><i class="fas fa-check"></i> Instant Withdrawals</div>
+                    <div><i class="fas fa-check"></i> Premium Support</div>
+                </div>
+                <button class="btn btn-block buy-vip" data-tier="vip2" data-price="60">
+                    <i class="fas fa-shopping-cart"></i> Buy VIP 2
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment Verification Section -->
+        <div class="verification-card" id="verificationSection" style="display: none;">
+            <div class="card-title">
+                <i class="fas fa-check-circle"></i> Payment Verification
+            </div>
+            <div class="verification-info">
+                <p>Please submit your payment details for verification</p>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Your Telegram Username</label>
+                <input type="text" class="form-input" id="telegramUsername" placeholder="@username" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Payment Screenshot</label>
+                <div class="file-upload-area" id="fileUploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload payment screenshot</p>
+                    <input type="file" id="screenshotUpload" accept="image/*" hidden>
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Transaction Hash (Optional)</label>
+                <input type="text" class="form-input" id="transactionHash" placeholder="Enter transaction hash">
+            </div>
+            
+            <button class="btn btn-success btn-block" id="submitVerificationBtn">
+                <i class="fas fa-paper-plane"></i> Submit Verification
+            </button>
+        </div>
+
+        <!-- Withdrawal Section -->
+        <div class="withdraw-card">
+            <div class="card-title">
+                <i class="fas fa-wallet"></i> Withdraw Funds
+            </div>
+            
+            <div class="withdrawal-options">
+                <div class="withdrawal-tabs">
+                    <button class="withdrawal-tab active" data-tab="bitget">Bitget UID</button>
+                    <button class="withdrawal-tab" data-tab="bybit">Bybit UID</button>
+                    <button class="withdrawal-tab" data-tab="blockchain">Blockchain</button>
+                </div>
+                
+                <!-- Bitget Withdrawal -->
+                <div class="withdrawal-content active" id="bitgetWithdrawal">
+                    <div class="form-group">
+                        <label class="form-label">Bitget UID</label>
+                        <input type="text" class="form-input" id="bitgetUid" placeholder="Enter your Bitget UID" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Withdrawal Amount (USDT)</label>
+                        <input type="number" class="form-input" id="bitgetAmount" placeholder="Enter amount" min="0.01" step="0.01">
+                        <div class="form-hint" id="bitgetLimit">Free User Limit: 0.02 USDT</div>
+                    </div>
+                    
+                    <button class="btn btn-success btn-block withdraw-submit" data-type="bitget">
+                        <i class="fas fa-paper-plane"></i> Withdraw to Bitget
+                    </button>
+                </div>
+                
+                <!-- Bybit Withdrawal -->
+                <div class="withdrawal-content" id="bybitWithdrawal">
+                    <div class="form-group">
+                        <label class="form-label">Bybit UID</label>
+                        <input type="text" class="form-input" id="bybitUid" placeholder="Enter your Bybit UID" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Withdrawal Amount (USDT)</label>
+                        <input type="number" class="form-input" id="bybitAmount" placeholder="Enter amount" min="0.01" step="0.01">
+                        <div class="form-hint" id="bybitLimit">Free User Limit: 0.02 USDT</div>
+                    </div>
+                    
+                    <button class="btn btn-success btn-block withdraw-submit" data-type="bybit">
+                        <i class="fas fa-paper-plane"></i> Withdraw to Bybit
+                    </button>
+                </div>
+                
+                <!-- Blockchain Withdrawal -->
+                <div class="withdrawal-content" id="blockchainWithdrawal">
+                    <div class="form-group">
+                        <label class="form-label">Select Coin</label>
+                        <select class="form-input" id="blockchainCoin">
+                            <option value="usdt">USDT</option>
+                            <option value="bnb">BNB</option>
+                            <option value="sol">SOL</option>
+                            <option value="trx">TRX</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Wallet Address</label>
+                        <input type="text" class="form-input" id="blockchainAddress" placeholder="Enter your wallet address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Withdrawal Amount</label>
+                        <input type="number" class="form-input" id="blockchainAmount" placeholder="Enter amount" min="0.01" step="0.01">
+                        <div class="form-hint" id="blockchainLimit">Free User Limit: 0.02 USDT</div>
+                    </div>
+                    
+                    <button class="btn btn-success btn-block withdraw-submit" data-type="blockchain">
+                        <i class="fas fa-paper-plane"></i> Withdraw to Wallet
+                    </button>
+                </div>
+            </div>
+            
+            <div class="processing-info">
+                <i class="fas fa-info-circle"></i> Withdrawals processed within 24 hours
+            </div>
+        </div>
+
+        <!-- User Stats Section -->
+        <div class="stats-card">
+            <div class="card-title">
+                <i class="fas fa-chart-bar"></i> Mining Statistics
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="totalMiningTime">00:00:00</div>
+                        <div class="stat-label">Total Mining</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="totalMined">0.0000 BNB</div>
+                        <div class="stat-label">Total Mined</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="currentSpeed">0.5 BNB/H</div>
+                        <div class="stat-label">Current Speed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="userId">USR738225</div>
-</header>
 
-<div class="container">
-
-    <div class="balance-card">
-        <div>Balance: <span id="userBalance">0.00 USDT</span></div>
-        <div>Today: <span id="todayEarnings">0.00 USDT</span></div>
-        <div>Total Earned: <span id="totalEarned">0.00 USDT</span></div>
-        <div>Status: <span id="userStatus" class="status-free">Free User</span></div>
-    </div>
-
-    <div class="mining-section">
-        <div class="mining-circle">
-            <div class="mining-core"></div>
-        </div>
-        <div class="mining-status" id="miningStatus">Mining Inactive</div>
-        <div id="miningSpeed">Speed: 0.5 BNB/H</div>
-        <button id="startMiningBtn"><i class="fas fa-play"></i> Start Mining</button>
-    </div>
-
-    <!-- Redeem code section removed from home page as requested -->
-
-    <div class="withdrawal-card" style="display:none;" id="withdrawCard">
-        <h3>Withdraw</h3>
-        <div class="withdrawal-tabs">
-            <span class="withdrawal-tab active" data-tab="bitget">Bitget</span>
-            <span class="withdrawal-tab" data-tab="bybit">Bybit</span>
-            <span class="withdrawal-tab" data-tab="blockchain">Blockchain</span>
-        </div>
-        <div class="withdrawal-content active" id="bitgetWithdrawal">
-            <input type="number" id="bitgetAmount" placeholder="Amount (USDT)">
-            <input type="text" id="bitgetUid" placeholder="Bitget UID">
-            <button class="withdraw-submit" data-type="bitget">Submit</button>
-        </div>
-        <div class="withdrawal-content" id="bybitWithdrawal">
-            <input type="number" id="bybitAmount" placeholder="Amount (USDT)">
-            <input type="text" id="bybitUid" placeholder="Bybit UID">
-            <button class="withdraw-submit" data-type="bybit">Submit</button>
-        </div>
-        <div class="withdrawal-content" id="blockchainWithdrawal">
-            <input type="number" id="blockchainAmount" placeholder="Amount (USDT)">
-            <input type="text" id="blockchainAddress" placeholder="Wallet Address">
-            <select id="blockchainCoin">
-                <option value="bnb">BNB</option>
-                <option value="trx">TRX</option>
-                <option value="sol">SOL</option>
-            </select>
-            <button class="withdraw-submit" data-type="blockchain">Submit</button>
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <div class="payment-title" id="paymentTitle">Buy VIP 1 - 10 USDT</div>
+            
+            <div class="chain-options">
+                <div class="chain-option" data-chain="bnb">
+                    <i class="fab fa-bootstrap"></i>
+                    <div>BNB Chain</div>
+                </div>
+                <div class="chain-option" data-chain="trx">
+                    <i class="fas fa-bolt"></i>
+                    <div>TRX Chain</div>
+                </div>
+                <div class="chain-option" data-chain="sol">
+                    <i class="fas fa-sun"></i>
+                    <div>SOL Chain</div>
+                </div>
+            </div>
+            
+            <div class="address-display" id="addressDisplay">
+                <!-- Address will be inserted here -->
+            </div>
+            
+            <div class="payment-instructions">
+                <p><strong>Send exact amount to the address above</strong></p>
+                <p><strong>Memo Required:</strong> <span id="memoDisplay"></span></p>
+            </div>
+            
+            <div class="payment-actions">
+                <button class="btn btn-block" id="copyAddressBtn">
+                    <i class="fas fa-copy"></i> Copy Address & Memo
+                </button>
+                
+                <button class="btn btn-success btn-block" id="confirmPaymentBtn">
+                    <i class="fas fa-check"></i> I Have Paid
+                </button>
+                
+                <button class="btn btn-block btn-cancel" id="closePaymentBtn">
+                    <i class="fas fa-times"></i> Cancel Payment
+                </button>
+            </div>
         </div>
     </div>
 
-</div>
-
-<!-- Payment Modal -->
-<div id="paymentModal">
-    <div class="modal-content">
-        <h3 id="paymentTitle">Payment</h3>
-        <div class="chain-options">
-            <div class="chain-option" data-chain="bnb">BNB</div>
-            <div class="chain-option" data-chain="trx">TRX</div>
-            <div class="chain-option" data-chain="sol">SOL</div>
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-item active" data-tab="home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
         </div>
-        <div id="addressDisplay"></div>
-        <button id="copyAddressBtn" disabled>Copy Address</button>
-        <button id="confirmPaymentBtn">Confirm Payment</button>
-        <button id="closePaymentBtn">Close</button>
+        <div class="nav-item" data-tab="vip">
+            <i class="fas fa-crown"></i>
+            <span>VIP</span>
+        </div>
+        <div class="nav-item" data-tab="withdraw">
+            <i class="fas fa-wallet"></i>
+            <span>Withdraw</span>
+        </div>
+        <div class="nav-item" data-tab="stats">
+            <i class="fas fa-chart-bar"></i>
+            <span>Stats</span>
+        </div>
     </div>
-</div>
 
-<!-- File upload & verification -->
-<div id="verificationSection" style="display:none;">
-    <input type="text" id="telegramUsername" placeholder="Telegram Username">
-    <div id="fileUploadArea">Upload Screenshot</div>
-    <input type="file" id="screenshotUpload" style="display:none;">
-    <div id="filePreview" style="display:none;"></div>
-    <button id="submitVerificationBtn">Submit Verification</button>
-</div>
-
-<script>
-// === JS CODE ===
-// DOM Elements
-const navItems = document.querySelectorAll('.nav-item');
-const startMiningBtn = document.getElementById('startMiningBtn');
-const buyVipBtns = document.querySelectorAll('.buy-vip');
-const paymentModal = document.getElementById('paymentModal');
-const closePaymentBtn = document.getElementById('closePaymentBtn');
-const chainOptions = document.querySelectorAll('.chain-option');
-const copyAddressBtn = document.getElementById('copyAddressBtn');
-const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
-const withdrawSubmitBtns = document.querySelectorAll('.withdraw-submit');
-const submitVerificationBtn = document.getElementById('submitVerificationBtn');
-const miningCircle = document.querySelector('.mining-circle');
-const miningCore = document.querySelector('.mining-core');
-const miningStatusText = document.getElementById('miningStatus');
-const miningSpeedText = document.getElementById('miningSpeed');
-const screenshotUpload = document.getElementById('screenshotUpload');
-const fileUploadArea = document.getElementById('fileUploadArea');
-const filePreview = document.getElementById('filePreview');
-
-let userData = {
-    balance: 0.00,
-    totalMined: 0.0000,
-    miningActive: false,
-    userStatus: 'free',
-    dailyEarning: 0.10,
-    currentSpeed: 0.5,
-    userId: 'USR738225',
-    totalMiningTime: 0
-};
-
-// Demo telegram API
-const telegramBotToken = 'DEMO_TOKEN';
-const telegramChatId = 'DEMO_CHATID';
-
-let miningInterval;
-
-document.addEventListener('DOMContentLoaded', function() {
-    updateUI();
-    setupEventListeners();
-});
-
-function setupEventListeners() {
-    startMiningBtn.addEventListener('click', handleMiningToggle);
-    closePaymentBtn.addEventListener('click', closePaymentModal);
-    chainOptions.forEach(opt => opt.addEventListener('click', handleChainSelection));
-    copyAddressBtn.addEventListener('click', handleCopyAddress);
-    confirmPaymentBtn.addEventListener('click', handleConfirmPayment);
-    submitVerificationBtn.addEventListener('click', handleVerificationSubmission);
-}
-
-function handleMiningToggle() {
-    if (userData.miningActive) stopMining();
-    else startMining();
-}
-
-function startMining() {
-    userData.miningActive = true;
-    startMiningBtn.textContent = 'Stop Mining';
-    miningCircle.classList.add('active');
-    miningStatusText.textContent = 'Mining Active';
-    
-    miningInterval = setInterval(() => {
-        const mined = userData.currentSpeed / 3600;
-        userData.totalMined += mined;
-        userData.balance += mined;
-        updateUI();
-    }, 1000);
-}
-
-function stopMining() {
-    userData.miningActive = false;
-    startMiningBtn.textContent = 'Start Mining';
-    miningCircle.classList.remove('active');
-    miningStatusText.textContent = 'Mining Inactive';
-    clearInterval(miningInterval);
-}
-
-function updateUI() {
-    document.getElementById('userBalance').textContent = userData.balance.toFixed(2) + ' USDT';
-    miningSpeedText.textContent = 'Speed: ' + userData.currentSpeed + ' BNB/H';
-}
-
-function handleChainSelection(event) {
-    chainOptions.forEach(opt => opt.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    const chain = event.currentTarget.getAttribute('data-chain');
-    const addressDisplay = document.getElementById('addressDisplay');
-    addressDisplay.textContent = `${chain.toUpperCase()} Address: DEMO_ADDRESS\nMemo: ${userData.userId}`;
-    addressDisplay.style.display = 'block';
-    copyAddressBtn.disabled = false;
-}
-
-function handleCopyAddress() {
-    copyToClipboard(document.getElementById('addressDisplay').textContent);
-    showNotification('Address copied!', 'success');
-}
-
-function handleConfirmPayment() {
-    paymentModal.style.display = 'none';
-    document.getElementById('verificationSection').style.display = 'block';
-}
-
-function closePaymentModal() {
-    paymentModal.style.display = 'none';
-    document.getElementById('addressDisplay').style.display = 'none';
-    copyAddressBtn.disabled = true;
-}
-
-function handleVerificationSubmission() {
-    showNotification('Payment verified! VIP activated.', 'success');
-    userData.userStatus = 'vip';
-    userData.dailyEarning = 7.00;
-    userData.currentSpeed = 15.0;
-    updateUI();
-}
-
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-}
-
-function showNotification(message, type) {
-    const notif = document.createElement('div');
-    notif.className = 'notification ' + (type==='error'?'error':'success');
-    notif.textContent = message;
-    document.body.appendChild(notif);
-    setTimeout(()=>notif.remove(),3000);
-}
-
-</script>
+    <script src="script.js"></script>
 </body>
-                </html>
+</html>
