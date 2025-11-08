@@ -26,7 +26,7 @@ const miningSpeedText = document.getElementById('miningSpeed');
 
 // User data
 let userData = {
-    balance: 0.00,
+    balance: 20000.00,
     todayEarnings: 0.00,
     totalEarned: 0.00,
     userStatus: 'free',
@@ -43,19 +43,6 @@ let userData = {
     withdrawalHistory: []
 };
 
-// VIP Codes (10 codes for VIP 2 - 60 USDT value)
-const vipCodes = [
-    { code: 'VIP60A7B9C1', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60D2E3F4', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60G5H6I7', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60J8K9L0', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60M1N2O3', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60P4Q5R6', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60S7T8U9', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60V0W1X2', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60Y3Z4A5', used: false, value: 60, type: 'vip2' },
-    { code: 'VIP60B6C7D8', used: false, value: 60, type: 'vip2' }
-];
 
 // Wallet addresses
 const walletAddresses = {
