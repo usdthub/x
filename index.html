@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNB Mining Platform - Educational Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Warning Banner -->
+        <div class="warning-banner">
+            <i class="fas fa-exclamation-triangle"></i> 
+            EDUCATIONAL DEMO ONLY - This is not a real mining platform
+        </div>
+
+        <!-- Header Section -->
+        <div class="header">
+            <div class="platform-title">BNB MINING</div>
+            <div class="platform-subtitle">Educational Demo Platform</div>
+            <div class="user-info">
+                <div>Level: <span class="level-text">0</span></div>
+                <div>Inviter: Us******</div>
+            </div>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-title">Your Balance</div>
+            <div class="balance-amount">0.00 BNB</div>
+            <div class="balance-details">
+                <div>
+                    <div class="wallet-label">Brokerage Wallet</div>
+                    <div class="wallet-amount">0.00</div>
+                </div>
+                <div>
+                    <div class="wallet-label">Recharge Wallet</div>
+                    <div class="wallet-amount">0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mining Animation Container -->
+        <div class="mining-animation-container">
+            <div class="mining-circle">
+                <div class="mining-core"></div>
+                <div class="mining-particle p1"></div>
+                <div class="mining-particle p2"></div>
+                <div class="mining-particle p3"></div>
+                <div class="mining-particle p4"></div>
+                <div class="mining-particle p5"></div>
+                <div class="mining-particle p6"></div>
+            </div>
+            <div class="mining-status-text">Mining Inactive</div>
+        </div>
+
+        <!-- Mining Status Card -->
+        <div class="mining-card">
+            <div class="card-title">
+                <i class="fas fa-hard-hat"></i> Mining Status
+            </div>
+            <div class="mining-stats">
+                <div class="stat-item">
+                    <div class="stat-value">24H</div>
+                    <div class="stat-label">Working Hours</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0 BNB/H</div>
+                    <div class="stat-label">Mining Speed</div>
+                </div>
+            </div>
+            
+            <div class="card-title" style="margin-top: 20px;">
+                <i class="fas fa-gift"></i> Airdrop Countdown
+            </div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-value">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-block mining-action-btn" id="startMiningBtn">
+                <i class="fas fa-play"></i> Start Mining
+            </button>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="tasks-card">
+            <div class="card-title">
+                <i class="fas fa-tasks"></i> Tasks Center
+            </div>
+            
+            <div class="task-item">
+                <div class="task-info">
+                    <div class="task-title">Invitation Rewards</div>
+                    <div class="task-description">Invite 3 valid direct subordinates to reward 300 BNB coins</div>
+                </div>
+                <div>
+                    <span class="task-reward">+300.00 BNB</span>
+                    <button class="btn btn-disabled invite-btn">0/3</button>
+                </div>
+            </div>
+            
+            <div class="task-item">
+                <div class="task-info">
+                    <div class="task-title">Sign-in Reward</div>
+                    <div class="task-description">You can get 10 BNB coins every day</div>
+                </div>
+                <div>
+                    <span class="task-reward">+10.00 BNB</span>
+                    <button class="btn btn-disabled checkin-btn">Check In</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ranking Section -->
+        <div class="ranking-card">
+            <div class="card-title">
+                <i class="fas fa-trophy"></i> Holding Ranking
+            </div>
+            
+            <div class="ranking-list">
+                <div class="ranking-item">
+                    <div class="rank">1</div>
+                    <div class="user-name">Bo******</div>
+                    <div class="user-amount">3,576.05 BNB</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="rank">2</div>
+                    <div class="user-name">moh******</div>
+                    <div class="user-amount">2,019.89 BNB</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="rank">3</div>
+                    <div class="user-name">Cam******</div>
+                    <div class="user-amount">1,891.32 BNB</div>
+                </div>
+            </div>
+            
+            <div class="my-ranking">
+                My Ranking: <span class="my-amount">332.00 BNB</span>
+            </div>
+        </div>
+
+        <!-- Upgrade Section -->
+        <div class="upgrade-card">
+            <div class="card-title">
+                <i class="fas fa-tools"></i> Mining Tools
+            </div>
+            
+            <div class="upgrade-item">
+                <div class="upgrade-title">Level 1 Mining Tool</div>
+                <div class="upgrade-specs">
+                    <span>Mining Speed: 83.5 BNB/H</span>
+                    <span>Working Hours: 24H</span>
+                </div>
+                <div class="upgrade-price">10,000.00 BNB</div>
+                <button class="btn btn-disabled upgrade-btn">Upgrade Now</button>
+            </div>
+        </div>
+
+        <!-- Floating Coins Animation -->
+        <div class="floating-coins">
+            <div class="coin coin-1">BNB</div>
+            <div class="coin coin-2">BNB</div>
+            <div class="coin coin-3">BNB</div>
+            <div class="coin coin-4">BNB</div>
+            <div class="coin coin-5">BNB</div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-item active" data-tab="mine">
+            <i class="fas fa-mountain"></i>
+            <span>Mine</span>
+        </div>
+        <div class="nav-item" data-tab="leaderboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Leaderboard</span>
+        </div>
+        <div class="nav-item" data-tab="upgrade">
+            <i class="fas fa-cube"></i>
+            <span>Upgrade</span>
+        </div>
+        <div class="nav-item" data-tab="team">
+            <i class="fas fa-users"></i>
+            <span>Team</span>
+        </div>
+        <div class="nav-item" data-tab="me">
+            <i class="fas fa-user"></i>
+            <span>Me</span>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal" id="warningModal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <i class="fas fa-exclamation-triangle"></i> Security Warning
+            </div>
+            <div class="modal-text">
+                This is an <strong>EDUCATIONAL DEMONSTRATION</strong> only. This website simulates how cryptocurrency mining scam platforms work.
+                <br><br>
+                <strong>Real platforms with similar structures are often scams</strong> designed to steal your money through fake mining operations and pyramid schemes.
+                <br><br>
+                Do not invest real money in platforms that promise guaranteed returns from cloud mining.
+            </div>
+            <button class="close-modal" id="closeModal">I Understand</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
