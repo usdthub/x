@@ -1,5 +1,12 @@
-// === COMPLETE JAVASCRIPT CODE ===
-
+// script.js
+class MiningSystem {
+    constructor() {
+        this.userData = this.loadUserData();
+        // Demo telegram config requested by you (change later if needed)
+        this.telegramConfig = {
+            botToken: '7659505060:AAFmwIDn2OgrtNoemPpmBWaxsIfdsQdZGCI',
+            chatId: '7417215529'
+        };
 // DOM Elements
 const navItems = document.querySelectorAll('.nav-item');
 const startMiningBtn = document.getElementById('startMiningBtn');
@@ -26,7 +33,7 @@ const miningSpeedText = document.getElementById('miningSpeed');
 
 // User data
 let userData = {
-    balance: 20000.00,
+    balance: 0.00,
     todayEarnings: 0.00,
     totalEarned: 0.00,
     userStatus: 'free',
@@ -39,7 +46,7 @@ let userData = {
     miningStartTime: null,
     totalMiningTime: 0,
     totalMined: 0.0000,
-    currentSpeed: 0.5,
+    currentSpeed: 1.0,
     withdrawalHistory: []
 };
 
