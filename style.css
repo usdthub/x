@@ -1,73 +1,110 @@
 :root {
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --mining-active: #ffc107;
-    --bg-dark: #121212;
-    --card-bg: #1e1e1e;
-    --hover-color: #333;
-}
-
-* {
-    box-sizing: border-box;
+    --success-color: #4CAF50;
+    --danger-color: #F44336;
+    --mining-active: #FFD700;
 }
 
 body {
     font-family: Arial, sans-serif;
+    background: #1a1a1a;
+    color: #fff;
     margin: 0;
     padding: 0;
-    background: var(--bg-dark);
-    color: #fff;
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-}
-
-.balance-card,
-.mining-section,
-.redeem-card,
-.withdraw-card,
-.vip-card {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.navbar {
+header {
+    background: #111;
+    padding: 10px 20px;
     display: flex;
-    justify-content: flex-start;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav-item {
-    padding: 10px 20px;
-    margin-right: 10px;
+    display: inline-block;
+    margin-right: 20px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
 }
 
-.nav-item.active,
-.nav-item:hover {
-    background: #ffc107;
-    color: #000;
+.nav-item.active {
+    font-weight: bold;
+    color: #FFD700;
 }
 
-#startMiningBtn {
-    padding: 10px 20px;
+.container {
+    padding: 20px;
+}
+
+.balance-card, .mining-section, .redeem-card, .withdrawal-card {
+    background: #222;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.status-vip {
+    color: gold;
+}
+
+.status-free {
+    color: #aaa;
+}
+
+.mining-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    margin: 20px auto;
+    position: relative;
+}
+
+.mining-circle.active {
+    animation: rotateCircle 4s linear infinite;
+}
+
+.mining-core {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #FFD700;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mining-status {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.mining-status.active {
+    color: #4CAF50;
+}
+
+.mining-particle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #FFD700;
+    position: absolute;
+}
+
+button {
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background: #007bff;
-    color: #fff;
-    transition: 0.3s;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
-#startMiningBtn.active {
-    background: var(--success-color);
+button.active {
+    background: #4CAF50;
+    color: #fff;
 }
 
 .notification {
@@ -76,7 +113,7 @@ body {
     right: 20px;
     padding: 15px 20px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    color: #fff;
     z-index: 3000;
     max-width: 300px;
     animation: slideInRight 0.5s ease;
@@ -90,95 +127,44 @@ body {
     background: var(--success-color);
 }
 
-#paymentModal,
-#verificationSection {
-    display: none;
-    position: fixed;
-    top: 0; left:0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="file"],
-textarea,
-select {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 15px;
-    border-radius: 5px;
-    border: none;
-    background: #2c2c2c;
-    color: #fff;
-}
-
-button {
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    background: #007bff;
-    color: #fff;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
 .floating-coin {
     position: fixed;
     font-size: 20px;
     opacity: 0;
     animation: floatCoin 2s ease-in forwards;
+    z-index: 1000;
     pointer-events: none;
 }
 
-@keyframes floatCoin {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-150px); opacity: 0; }
+#paymentModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
 }
 
-.mining-circle,
-.mining-core,
-.mining-particle {
-    position: relative;
+#paymentModal .modal-content {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
 }
 
-.mining-circle.active,
-.mining-core.active {
-    animation: rotate 2s linear infinite;
-}
-
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+#addressDisplay {
+    margin-top: 10px;
+    display: none;
 }
 
 #fileUploadArea {
-    border: 2px dashed #555;
-    padding: 20px;
+    background: #333;
+    padding: 15px;
     border-radius: 10px;
     text-align: center;
     cursor: pointer;
-    margin-bottom: 15px;
-    transition: 0.3s;
-}
-
-#fileUploadArea:hover {
-    background: #2c2c2c;
+    margin: 10px 0;
 }
 
 #filePreview img {
@@ -187,69 +173,15 @@ button:hover {
     margin-top: 10px;
 }
 
-.vip-code-item {
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #2c2c2c;
-    transition: 0.3s;
+/* Animations */
+@keyframes rotateCircle {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.vip-code-item.available:hover {
-    background: var(--success-color);
-    color: #000;
-}
-
-.vip-code-item.used {
-    background: #555;
-    cursor: not-allowed;
-    text-decoration: line-through;
-}
-
-.status-free {
-    color: #ccc;
-}
-
-.status-vip {
-    color: #ffc107;
-}
-
-.form-hint {
-    font-size: 12px;
-    color: #aaa;
-}
-
-.chain-option {
-    display: inline-block;
-    padding: 10px;
-    margin-right: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    background: #2c2c2c;
-}
-
-.chain-option.active,
-.chain-option:hover {
-    background: #ffc107;
-    color: #000;
-}
-
-@keyframes slideInRight {
-    0% { transform: translateX(100%); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
-}
-
-/* Mining visual effect */
-.mining-effect {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--mining-active);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 100;
-    animation: miningEffect 1s ease-out forwards;
+@keyframes floatCoin {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-200px); opacity: 0; }
 }
 
 @keyframes miningEffect {
